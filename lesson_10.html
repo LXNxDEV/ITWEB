@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>වෙබ් සංවර්ධනය</title>
+    <style>
+        /* Import modern fonts including Sinhala support */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@300;400;600;700&display=swap'); /* Added Sinhala font */
+
+        /* Define CSS Variables for easier theming */
+        :root {
+            /* Added Noto Sans Sinhala as primary, Poppins as fallback */
+            --font-primary: 'Noto Sans Sinhala', 'Poppins', sans-serif;
+            --bg-gradient: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            --card-bg: rgba(31, 41, 55, 0.8);
+            --card-bg-hover: rgba(55, 65, 81, 0.9);
+            --input-bg: rgba(17, 24, 39, 0.8);
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            --accent-primary: #38bdf8; /* Light blue */
+            --accent-secondary: #2dd4bf; /* Teal */
+            --border-color: rgba(75, 85, 99, 0.6);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --shadow-color-light: rgba(0, 0, 0, 0.2);
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --info-color: #0dcaf0;
+            --danger-color: #dc3545;
+            --neutral-color: #6c757d;
+            --whatsapp-green: #25D366;
+            --whatsapp-green-dark: #1EAE56;
+            --whatsapp-teal: #128C7E;
+            --whatsapp-teal-dark: #075E54;
+
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            --border-radius-xl: 50px;
+
+            --transition-speed: 0.3s;
+            --transition-speed-fast: 0.2s;
+         }
+
+        /* General Styling */
+        body {
+            font-family: var(--font-primary); /* Applied Sinhala font */
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding-bottom: 80px; /* Footer height + padding */
+        }
+        /* Apply English font when 'en' class is present */
+        body.en {
+            --font-primary: 'Poppins', 'Noto Sans Sinhala', sans-serif; /* Poppins first for English */
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 30px auto;
+            padding: 25px 30px;
+            background-color: var(--card-bg);
+            box-shadow: 0 8px 30px var(--shadow-color);
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--border-color);
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--accent-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            position: relative; /* Needed for absolute positioning of the button */
+        }
+
+        /* --- START: Language Toggle Button Style & Animation --- */
+        #lang-toggle-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 8px 15px;
+            font-size: 0.9em;
+            background-color: var(--neutral-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease, transform var(--transition-speed-fast) ease, box-shadow var(--transition-speed) ease;
+            z-index: 10; /* Ensure it's above other header content if any overlap */
+            box-shadow: 0 2px 5px var(--shadow-color-light);
+            display: inline-flex; /* For potential icon alignment */
+            align-items: center;
+            gap: 5px;
+        }
+        #lang-toggle-btn:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px) scale(1.03); /* Slight lift and scale */
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+        #lang-toggle-btn:active {
+            transform: translateY(0px) scale(0.98); /* Push down effect */
+            box-shadow: 0 1px 3px var(--shadow-color-light);
+        }
+        /* --- END: Language Toggle Button Style & Animation --- */
+
+
+        h1, h2, h3, h4 {
+            margin-bottom: 0.8em;
+            font-weight: 600;
+        }
+
+        h1 { font-size: 2.5em; color: var(--accent-primary); }
+        h2 { font-size: 1.8em; color: var(--accent-secondary); }
+        h3 { font-size: 1.4em; }
+        h4 { font-size: 1.2em; color: var(--accent-secondary); }
+
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+
+        a:hover {
+            color: var(--accent-secondary);
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Mindmap Area - Hidden */
+        #mindmap-area {
+            display: none;
+        }
+
+         /* Main Subtopics Area (Competency Levels 10.1, 10.2 etc.) */
+         #main-subtopics-container {
+            /* Removed .hidden class to make it visible by default */
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            background-color: rgba(17, 24, 39, 0.6);
+            margin-top: 0; /* Adjusted margin */
+            animation: fadeIn 0.6s ease-out;
+         }
+         /* Detailed Subtopics Area (Initially Hidden) */
+         #detailed-subtopics-container {
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            background-color: rgba(17, 24, 39, 0.6);
+            margin-top: 30px; /* Add margin when shown */
+            animation: fadeIn 0.6s ease-out;
+         }
+
+         #main-subtopic-list-title,
+         #detailed-subtopic-list-title {
+            text-align: center;
+            color: var(--text-primary);
+            margin-bottom: 25px;
+            font-size: 1.6em;
+         }
+
+         #back-to-main-subtopics { /* New back button */
+              margin-bottom: 20px;
+         }
+
+
+         #main-subtopic-list li,
+         #detailed-subtopic-list li {
+            background-color: var(--card-bg);
+            margin-bottom: 12px;
+            padding: 15px 20px;
+            border-radius: var(--border-radius-md);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, border-left-color var(--transition-speed) ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid transparent;
+         }
+
+         #main-subtopic-list li:hover,
+         #detailed-subtopic-list li:hover {
+            background-color: var(--card-bg-hover);
+            transform: translateX(5px);
+            border-left-color: var(--accent-primary);
+         }
+
+         .main-subtopic-id,
+         .detailed-subtopic-id {
+            font-weight: 600;
+            margin-right: 20px;
+            color: var(--accent-secondary);
+            flex-shrink: 0;
+            font-size: 0.95em;
+         }
+         .main-subtopic-text,
+         .detailed-subtopic-text {
+            flex-grow: 1;
+            text-align: left;
+            color: var(--text-primary);
+         }
+
+
+        /* Summary Card Area */
+        .summary-container {
+            padding: 25px;
+            margin-top: 30px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        #summary-title {
+            text-align: center;
+            color: var(--text-primary);
+            margin-bottom: 25px;
+            font-size: 1.6em;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: 0 6px 20px var(--shadow-color-light);
+        }
+
+        .card h4 { /* Target summary card headings */
+            color: var(--accent-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-top: 25px;
+            margin-bottom: 18px;
+            font-weight: 600;
+        }
+
+        .card h4:first-of-type {
+            margin-top: 0;
+        }
+
+
+        #summary-text {
+            margin-bottom: 20px;
+            background-color: rgba(17, 24, 39, 0.7);
+            padding: 15px;
+            border-radius: var(--border-radius-md);
+            border: 1px solid var(--border-color);
+            min-height: 50px;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+        #summary-text ul {
+            padding-left: 20px; /* Indent list items */
+            list-style: disc; /* Use standard bullets */
+        }
+        #summary-text li {
+            margin-bottom: 5px; /* Space between list items */
+        }
+
+
+        #video-links-list li,
+        #pdf-links-list li {
+            margin-bottom: 10px;
+            padding: 12px 15px;
+            background-color: rgba(55, 65, 81, 0.7);
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+            word-break: break-all;
+            display: flex;
+            flex-direction: column;
+            transition: background-color var(--transition-speed) ease;
+        }
+        #video-links-list li:hover,
+        #pdf-links-list li:hover {
+            background-color: rgba(75, 85, 99, 0.8);
+        }
+
+        #video-links-list li a,
+        #pdf-links-list li a {
+            margin-right: 0;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        #video-links-list li span.link-url,
+        #pdf-links-list li span.link-url {
+            font-style: normal;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+        #video-links-list li span.invalid-url,
+        #pdf-links-list li span.invalid-url {
+            color: var(--danger-color);
+            font-style: italic;
+        }
+        #video-links-list li.no-links, /* Target the placeholder li */
+        #pdf-links-list li.no-links { /* Target the placeholder li */
+            color: var(--text-secondary);
+            font-style: italic;
+            background-color: transparent;
+            border: none;
+            padding: 5px 0;
+        }
+
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 22px;
+            border: none;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            margin-top: 10px;
+            margin-right: 8px;
+            transition: background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease, transform var(--transition-speed) ease;
+            text-align: center;
+            box-shadow: 0 2px 5px var(--shadow-color-light);
+            vertical-align: middle;
+        }
+
+        .btn:hover {
+            opacity: 1;
+            box-shadow: 0 4px 10px var(--shadow-color);
+            transform: translateY(-2px);
+        }
+        .btn:active {
+            transform: translateY(0px) scale(0.98);
+            box-shadow: 0 1px 3px var(--shadow-color-light);
+        }
+
+        /* Specific button styles */
+        .btn-edit { display: none; } /* Hide edit/add buttons */
+        .btn-add { display: none; }
+        .btn-save { display: none; }
+        .btn-cancel { display: none; }
+
+        /* Back navigation buttons */
+        .back-btn {
+            background-color: var(--neutral-color);
+            color: white;
+            /* margin-bottom: 20px; */ /* Moved specific margin to individual buttons */
+            display: inline-block;
+            width: fit-content;
+        }
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+
+        /* Styles for buttons inside the summary card */
+        .card .btn {
+            display: block;
+            width: fit-content;
+            margin: 20px 0 5px 0;
+        }
+
+        /* WhatsApp Button (Trigger for Pop-up) */
+        .btn-whatsapp {
+            background-color: var(--whatsapp-green);
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: var(--whatsapp-green-dark);
+        }
+
+        .btn-whatsapp svg {
+            vertical-align: -0.125em;
+            margin-right: 6px;
+        }
+
+        /* Modals (Hidden as not used) */
+        .modal { display: none; }
+
+        /* --- START: WhatsApp Pop-up Styles --- */
+
+        .whatsapp-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(17, 24, 39, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+            backdrop-filter: blur(4px);
+        }
+
+        .whatsapp-popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.4s ease;
+        }
+
+        .whatsapp-popup-card {
+            background-color: var(--card-bg);
+            padding: 30px 40px;
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 10px 30px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            position: relative;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            color: var(--text-primary);
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+
+        .whatsapp-popup-overlay.show .whatsapp-popup-card {
+            transform: scale(1);
+        }
+
+        .whatsapp-popup-card h2 { /* Target WhatsApp popup title */
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--accent-primary);
+        }
+
+        .whatsapp-popup-card p { /* Target WhatsApp popup paragraph */
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .whatsapp-input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .whatsapp-popup-card input[type="tel"] {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            font-size: 1em;
+            box-sizing: border-box;
+            min-width: 0;
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+        .whatsapp-popup-card input[type="tel"]:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
+        }
+        .whatsapp-popup-card input.input-error {
+            border-color: var(--danger-color);
+        }
+
+        #confirm-number-btn {
+            background-color: var(--accent-primary);
+            color: #111827;
+            margin-left: 10px;
+            white-space: nowrap;
+            padding: 10px 20px;
+            border-radius: var(--border-radius-md);
+            font-size: 1em;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease, transform var(--transition-speed) ease;
+            box-shadow: 0 2px 5px var(--shadow-color-light);
+        }
+        #confirm-number-btn:hover {
+            background-color: #0ea5e9;
+            box-shadow: 0 4px 10px var(--shadow-color);
+            transform: translateY(-2px);
+        }
+
+        #send-whatsapp-message-btn {
+            background-color: var(--whatsapp-teal);
+            color: white;
+            margin-top: 15px;
+            width: 100%;
+            justify-content: center;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border-radius: var(--border-radius-md);
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease, transform var(--transition-speed) ease;
+            box-shadow: 0 2px 5px var(--shadow-color-light);
+        }
+        #send-whatsapp-message-btn:hover {
+            background-color: var(--whatsapp-teal-dark);
+            box-shadow: 0 4px 10px var(--shadow-color);
+            transform: translateY(-2px);
+        }
+
+        .whatsapp-popup-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            line-height: 1;
+            padding: 5px;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+        }
+        .whatsapp-popup-close-btn:hover {
+            color: var(--text-primary);
+            transform: scale(1.1);
+        }
+
+        .whatsapp-error-message {
+            color: var(--danger-color);
+            font-size: 0.9em;
+            margin-top: -5px;
+            margin-bottom: 10px;
+            text-align: left;
+            padding-left: 5px;
+            min-height: 1.2em;
+        }
+        .whatsapp-error-message:not([style*="block"]) {
+            visibility: hidden;
+        }
+
+        /* --- END: WhatsApp Pop-up Styles --- */
+
+
+        /* Footer Styles */
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: var(--card-bg);
+            padding: 15px 0;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            z-index: 999;
+            backdrop-filter: blur(5px);
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        footer a { /* Target footer link */
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design Enhancements */
+        @media (max-width: 992px) {
+            .container { margin: 20px; padding: 20px; }
+        }
+
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            #main-subtopics-container,
+            #detailed-subtopics-container,
+            .summary-container { padding: 20px; }
+            #main-subtopic-list li,
+            #detailed-subtopic-list li { flex-direction: column; align-items: flex-start; padding: 12px 15px; }
+            .main-subtopic-id,
+            .detailed-subtopic-id { margin-bottom: 8px; margin-right: 0; }
+            #main-subtopic-list li:hover,
+            #detailed-subtopic-list li:hover { transform: translateX(0px); border-left-width: 6px; }
+            .whatsapp-popup-card { width: 95%; padding: 25px; }
+            .whatsapp-input-group { flex-direction: column; align-items: stretch; }
+            .whatsapp-popup-card input[type="tel"] { margin-bottom: 10px; }
+            #confirm-number-btn { margin-left: 0; width: 100%; }
+            #send-whatsapp-message-btn { width: 100%; }
+            #lang-toggle-btn {
+                top: 5px;
+                right: 5px;
+                padding: 6px 10px;
+                font-size: 0.8em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body { font-size: 15px; }
+            .container { margin: 10px; padding: 15px; min-height: 90vh; }
+            h1 { font-size: 1.7em; }
+            h2 { font-size: 1.5em; }
+            h3 { font-size: 1.2em; }
+            .card { padding: 20px; }
+            .card .btn { width: 100%; margin: 15px 0 5px 0; box-sizing: border-box; }
+            .card .btn-whatsapp { width: 100%; margin: 15px 0 5px 0; box-sizing: border-box; }
+            #main-subtopic-list li,
+            #detailed-subtopic-list li,
+            #video-links-list li,
+            #pdf-links-list li { padding: 10px 12px; }
+            .whatsapp-popup-card { padding: 20px; }
+            .whatsapp-popup-card h2 { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <button id="lang-toggle-btn">Translate to English</button>
+            <h1 id="main-title">වෙබ් සංවර්ධනය (පාඩම 10)</h1>
+        </header>
+
+        <div id="mindmap-area" class="hidden"></div>
+
+        <div id="main-subtopics-container" class="main-subtopic-container">
+             <h2 id="main-subtopic-list-title">පාඩම 10: ප්‍රධාන මාතෘකා</h2>
+            <ul id="main-subtopic-list">
+                </ul>
+        </div>
+
+         <div id="detailed-subtopics-container" class="subtopic-container hidden">
+             <h2 id="detailed-subtopic-list-title">විස්තරාත්මක උප මාතෘකා</h2>
+             <button id="back-to-main-subtopics" class="btn back-btn">← ප්‍රධාන මාතෘකා වෙත ආපසු</button>
+            <ul id="detailed-subtopic-list">
+                </ul>
+         </div>
+
+
+        <div id="summary-card-container" class="summary-container hidden">
+             <h3 id="summary-title">උප මාතෘකා සාරාංශය</h3>
+             <button id="back-to-detailed-subtopics" class="btn back-btn">← උප මාතෘකා වෙත ආපසු</button>
+            <div id="summary-content" class="card">
+                 <h4 id="summary-heading">සාරාංශය</h4>
+                <p id="summary-text">සාරාංශය මෙහි පූරණය වනු ඇත.</p>
+                 <h4 id="video-heading">අදාළ වීඩියෝ</h4>
+                <ul id="video-links-list">
+                    <li class="no-links">තවම වීඩියෝ එකතු කර නොමැත.</li>
+                </ul>
+                 <h4 id="pdf-heading">අදාළ PDF</h4>
+                <ul id="pdf-links-list">
+                     <li class="no-links">තවම PDF එකතු කර නොමැත.</li>
+                </ul>
+                 <button id="open-whatsapp-popup" class="btn btn-whatsapp">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
+                         <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+                     </svg>
+                     <span id="whatsapp-btn-text">WhatsApp හරහා යවන්න</span>
+                 </button>
+            </div>
+        </div>
+    </div>
+
+     <div id="whatsapp-popup-overlay" class="whatsapp-popup-overlay" style="display: none;">
+         <div class="whatsapp-popup-card">
+             <button class="whatsapp-popup-close-btn" id="close-whatsapp-popup">×</button>
+             <h2 id="whatsapp-popup-title">WhatsApp අංකය ඇතුළත් කරන්න</h2>
+             <p id="whatsapp-popup-prompt">කරුණාකර රටේ කේතය සමඟ සම්පූර්ණ අංකය ඇතුළත් කරන්න (උදා: 94771234567).</p>
+             <div class="whatsapp-input-group">
+                  <input type="tel" id="whatsapp-number-input" placeholder="WhatsApp අංකය" required>
+                  <button id="confirm-number-btn">අංකය තහවුරු කරන්න</button>
+             </div>
+              <p id="whatsapp-error-message" class="whatsapp-error-message" style="display: none;">කරුණාකර වලංගු දුරකථන අංකයක් ඇතුළත් කරන්න.</p>
+              <button id="send-whatsapp-message-btn" style="display: none;">
+                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16" fill="currentColor" style="margin-right: 8px; vertical-align: middle;"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.8 0-67.6-9.5-97.2-27.2l-7.2-4.3-71.6 18.7L99 353.9l-4.7-7.5c-19.1-30.3-29.8-65.1-29.8-101.4 0-99.3 80.7-179.9 180-179.9 48.4 0 93.4 18.8 127.2 52.6 33.8 33.8 52.6 78.8 52.6 127.2 0 99.3-80.7 179.9-180 179.9zm131.2-160.6c-.7-1.3-4.6-2.1-9.7-4.1l-54.2-26.5c-4.1-2-6.9-2.8-9.7 2.8-2.8 5.6-20.9 26.5-25.6 31.9-4.6 5.6-9.2 6.3-17.3 2.1-8.1-4.1-34.1-12.5-64.9-40.6-23.9-22-40.1-49.8-44.8-58.1-4.6-8.4-.5-13 2.1-17.3 2.3-3.8 4.6-6.3 6.9-8.4 2.3-2.1 4.1-3.6 6.1-6.1 2.6-3.3 1.3-6.9-.7-9.7-2.1-2.8-9.7-23.2-13.3-31.9-3.6-8.7-7.3-7.5-10.4-7.5h-9.2c-3.1 0-8.1 1.3-12.5 6.1-4.6 4.8-17.6 17.3-17.6 42.1 0 24.8 18.1 48.8 20.9 52.1 2.8 3.3 35.4 56.7 86.1 76.5 12.1 4.7 22.6 7.5 30.5 9.7 16.7 4.7 31.9 4.1 43.4 2.5 13.3-1.8 41.4-16.9 47.2-33.4 5.9-16.4 5.9-30.6 4.1-33.4z"/></svg>
+                 <span id="send-whatsapp-btn-text">පණිවිඩය යවන්න</span>
+             </button>
+         </div>
+     </div>
+
+    <footer>
+        <p id="footer-text">
+            Developed by Lakshan <a href="https://t.me/MrLAXAN" target="_blank" rel="noopener noreferrer" id="footer-link">සංවර්ධක අමතන්න</a>
+        </p>
+    </footer>
+    <script>
+        // --- Language State ---
+        let currentLanguage = 'si'; // Default language
+
+        // --- Static Text Translations ---
+        const translations = {
+            si: {
+                pageTitle: "වෙබ් සංවර්ධනය",
+                mainTitle: "වෙබ් සංවර්ධනය (පාඩම 10)",
+                langToggleBtn: "Translate to English",
+                mainSubtopicListTitle: "පාඩම 10: ප්‍රධාන මාතෘකා",
+                detailedSubtopicListTitle: "විස්තරාත්මක උප මාතෘකා",
+                backToMainSubtopics: "← ප්‍රධාන මාතෘකා වෙත ආපසු",
+                backToDetailedSubtopics: "← උප මාතෘකා වෙත ආපසු",
+                summaryTitle: "උප මාතෘකා සාරාංශය",
+                summaryHeading: "සාරාංශය",
+                videoHeading: "අදාළ වීඩියෝ",
+                pdfHeading: "අදාළ PDF",
+                noLinks: "තවම {type} එකතු කර නොමැත.", // Placeholder for type
+                noVideos: "තවම වීඩියෝ එකතු කර නොමැත.",
+                noPdfs: "තවම PDF එකතු කර නොමැත.",
+                whatsappBtnText: "WhatsApp හරහා යවන්න",
+                whatsappPopupTitle: "WhatsApp අංකය ඇතුළත් කරන්න",
+                whatsappPopupPrompt: "කරුණාකර රටේ කේතය සමඟ සම්පූර්ණ අංකය ඇතුළත් කරන්න (උදා: 94771234567).",
+                whatsappNumberPlaceholder: "WhatsApp අංකය",
+                confirmNumberBtn: "අංකය තහවුරු කරන්න",
+                whatsappErrorMsg: "කරුණාකර වලංගු දුරකථන අංකයක් ඇතුළත් කරන්න.",
+                sendWhatsappBtnText: "පණිවිඩය යවන්න",
+                footerText: "Developed by Lakshan ",
+                footerLink: "සංවර්ධක අමතන්න",
+                invalidUrlFormat: "වලංගු නොවන URL ආකෘතිය",
+                summaryNotFound: "සාරාංශයක් නොමැත.",
+                subtopicDataNotFound: "උප මාතෘකා දත්ත සොයාගත නොහැක.",
+                errorGeneric: "දෝෂයකි",
+                whatsappGenericError: "යමක් වැරදී ඇත. කරුණාකර අංකය නැවත තහවුරු කරන්න.",
+                whatsappNoContext: "විශේෂිත මාතෘකාවක් තෝරාගෙන නොමැත.",
+                whatsappPopupBlocked: "WhatsApp විවෘත කළ නොහැක. කරුණාකර ඔබේ pop-up blocker සැකසුම් පරීක්ෂා කරන්න.",
+                whatsappCleanError: "පිරිසිදු කිරීමෙන් පසු අංක ආකෘතිය වලංගු නොවේ."
+            },
+            en: {
+                pageTitle: "Web Development",
+                mainTitle: "Web Development (Lesson 10)",
+                langToggleBtn: "Translate to Sinhala",
+                mainSubtopicListTitle: "Lesson 10: Main Topics",
+                detailedSubtopicListTitle: "Detailed Subtopics",
+                backToMainSubtopics: "← Back to Main Topics",
+                backToDetailedSubtopics: "← Back to Subtopics",
+                summaryTitle: "Subtopic Summary",
+                summaryHeading: "Summary",
+                videoHeading: "Related Videos",
+                pdfHeading: "Related PDFs",
+                noLinks: "No {type} added yet.", // Placeholder for type
+                noVideos: "No videos added yet.",
+                noPdfs: "No PDFs added yet.",
+                whatsappBtnText: "Send via WhatsApp",
+                whatsappPopupTitle: "Enter WhatsApp Number",
+                whatsappPopupPrompt: "Please enter the full number with country code (e.g., 94771234567).",
+                whatsappNumberPlaceholder: "WhatsApp Number",
+                confirmNumberBtn: "Confirm Number",
+                whatsappErrorMsg: "Please enter a valid phone number.",
+                sendWhatsappBtnText: "Send Message",
+                footerText: "Developed by Lakshan ",
+                footerLink: "Contact Developer",
+                invalidUrlFormat: "Invalid URL format",
+                summaryNotFound: "No summary available.",
+                subtopicDataNotFound: "Subtopic data not found.",
+                errorGeneric: "Error",
+                whatsappGenericError: "Something went wrong. Please confirm the number again.",
+                whatsappNoContext: "No specific topic selected.",
+                whatsappPopupBlocked: "Cannot open WhatsApp. Please check your pop-up blocker settings.",
+                whatsappCleanError: "Number format invalid after cleaning."
+            }
+        };
+
+
+        // --- Syllabus Data Structure for Lesson 10 with Translations ---
+        const syllabusData = {
+            "10": {
+                title: { si: "වෙබ් සංවර්ධනය", en: "Web Development" },
+                subtopics: {
+                    "10.1": {
+                        title: { si: "වෙබ් අවශ්‍යතාවය ගවේෂණය කරයි", en: "Explores the need for web" },
+                        subtopics: {
+                            "10.1.1": {
+                                title: { si: "ලෝක ව්‍යාප්ත වෙබ් (WWW)", en: "World Wide Web (WWW)" },
+                                summary: { si: "• ලෝක ව්‍යාප්ත වෙබ් (www).", en: "• The world wide web (www)." },
+                                videos: [], pdfs: []
+                            },
+                            "10.1.2": {
+                                title: { si: "වෙබ් අඩවි වර්ග (Types of Websites)", en: "Types of Websites" },
+                                summary: { si: "• තොරතුරු, පුවත්.\n• පුද්ගලික, අධ්‍යාපනික, වාණිජ, පර්යේෂණ.\n• වෙබ් ද්වාර (Web portals).", en: "• Information, news.\n• Personal, educational, commercial, Research.\n• Web portals." },
+                                videos: [], pdfs: []
+                            }
+                        }
+                    },
+                     "10.2": {
+                        title: { si: "පරිශීලක අවශ්‍යතා (බහුමාධ්‍ය අන්තර්ගත) විශ්ලේෂණය කරයි", en: "Analyses user requirements (multimedia contents)" },
+                        subtopics: {
+                            "10.2.1": {
+                                title: { si: "වෙබ් අඩවි අරමුණු සහ අන්තර්ගතය (Website Objectives & Content)", en: "Website Objectives & Content" },
+                                summary: { si: "• වෙබ් අඩවියක අරමුණු නිර්වචනය කිරීම.\n• ප්‍රදර්ශනය කළ යුතු අන්තර්ගතය.\n• වෙබ් අඩවියක ඵලදායී සහ සුදුසු තොරතුරු සැකැස්ම.", en: "• Defining the objectives of a website.\n• Contents to be displayed.\n• Creates effective and appropriate information layout of a website." },
+                                videos: [], pdfs: []
+                            },
+                            "10.2.2": {
+                                title: { si: "වෙබ් අඩවි ව්‍යුහය (Website Structure)", en: "Website Structure" },
+                                summary: { si: "• වෙබ් අඩවියක වෙබ් පිටු හඳුනා ගැනීම.\n• වෙබ් පිටුවක අන්තර්ගතය හඳුනා ගැනීම.\n• සංචාලන ව්‍යුහය (Navigation structure) හඳුනා ගැනීම.", en: "• Identifies the web pages of a website.\n• Identifies the contents of a web page.\n• Identifies navigation structure." },
+                                videos: [], pdfs: []
+                            }
+                        }
+                    },
+                    "10.3": {
+                        title: { si: "තනි වෙබ් පිටුවක් නිර්මාණය කිරීමට සුදුසු HTML ටැග් හඳුනා ගනී", en: "Identifies appropriate HTML tags to design a single web page" },
+                         subtopics: {
+                             "10.3.1": {
+                                 title: { si: "HTML ගොඩනැගුම් කොටස් (HTML Building Blocks)", en: "HTML Building Blocks" },
+                                 summary: { si: "• වෙබ් පිටුවක ගොඩනැගුම් කොටස්:\n  - පිටු අර්ථ දැක්වීම: `<html></html>`\n  - ශීර්ෂ කොටස: `<head></head>`, `<title></title>`\n  - मुख्य කොටස: `<body></body>`\n• පසුබිම් වර්ණය.", en: "• Building blocks of a web page:\n  - Page definition: `<html></html>`\n  - Head section: `<head></head>`, `<title></title>`\n  - Body section: `<body></body>`\n• Background color." },
+                                 videos: [], pdfs: []
+                             },
+                             "10.3.2": {
+                                 title: { si: "පෙළ හැඩතල ගැන්වීම සහ අදහස් (Text Formatting & Comments)", en: "Text Formatting & Comments" },
+                                 summary: { si: "• පෙළ හැඩතල ගැන්වීම: `<h1>`...`<h6>` ටැග්, `<p></p>`, `<br/>`, යටින් ඉරි ඇඳීම, තදකුරු, ඇලකුරු, `<font></font>` (ප්‍රමාණය සහ වර්ණය).\n• අදහස් එකතු කිරීම.", en: "• Text formatting: `<h1>`…`<h6>` tags, `<p></p>`, `<br/>`, Underline, bold, italic, `<font></font>` (Size and color).\n• Adding comments." },
+                                 videos: [], pdfs: []
+                             }
+                         }
+                    },
+                    "10.4": {
+                        title: { si: "සම්බන්ධිත වෙබ් පිටු සෑදීමට HTML භාවිතා කරයි", en: "Uses HTML to create linked web pages" },
+                         subtopics: {
+                             "10.4.1": {
+                                 title: { si: "වෙබ් අඩවි අන්තර්ගතය සහ සබැඳි (Website Content & Links)", en: "Website Content & Links" },
+                                 summary: { si: "• වෙබ් අඩවියක අන්තර්ගතය: මුල් පිටුව, සම්බන්ධිත පිටු.\n• අධිසබැඳිය (Hyperlink): එකම පිටුවේ විවිධ කොටස් (bookmark), එකම අඩවියේ විවිධ පිටු (local link), විවිධ අඩවි වල පිටු (External link).", en: "• Contents of a website: Home page, Linked pages.\n• Hyperlink: Different sections of the same page (bookmark), Different pages of a same site (local link), Pages of different sites (External link)." },
+                                 videos: [], pdfs: []
+                            },
+                            "10.4.2": {
+                                 title: { si: "ලැයිස්තු, රූප සහ වගු (Lists, Images & Tables)", en: "Lists, Images & Tables" },
+                                 summary: { si: "• ලැයිස්තු: අනුපිළිවෙල ලැයිස්තු (Ordered), අනුපිළිවෙල රහිත ලැයිස්තු (Unordered), අර්ථ දැක්වීමේ ලැයිස්තු (Definition).\n• රූප (Image).\n• වගු: `<table>`, `<th>`, `<tr>`, `<td>`, `<caption>`, තීරු සහ පේළි ඒකාබද්ධ කිරීම.", en: "• Lists: Ordered lists, Unordered lists, Definition lists.\n• Image.\n• Tables: `<table></table>`, `<th></th>`, `<tr></tr>`, `<td></td>`, `<caption>`, Merging columns and rows." },
+                                 videos: [], pdfs: []
+                            },
+                             "10.4.3": {
+                                 title: { si: "බහුමාධ්‍ය වස්තු (Multimedia Objects)", en: "Multimedia Objects" },
+                                 summary: { si: "• ශ්‍රව්‍ය (Audio).\n• වීඩියෝ (Video).", en: "• Audio.\n• Video." },
+                                 videos: [], pdfs: []
+                            }
+                         }
+                    },
+                    "10.5": {
+                        title: { si: "වෙබ් පිටුවල පෙනුම වෙනස් කිරීමට Style sheet භාවිතා කරයි", en: "Uses Style sheet to change the appearance of web pages" },
+                         subtopics: {
+                             "10.5.1": {
+                                 title: { si: "CSS හැඳින්වීම (Introduction to CSS)", en: "Introduction to CSS" },
+                                 summary: { si: "• Style sheet හැඳින්වීම.\n• CSS: සින්ටැක්ස්, අදහස්.", en: "• Introduction to style sheet.\n• CSS: Syntax, comments." },
+                                 videos: [], pdfs: []
+                            },
+                            "10.5.2": {
+                                 title: { si: "CSS තේරීම්කාරක සහ ඇතුළත් කිරීම (CSS Selectors & Insertion)", en: "CSS Selectors & Insertion" },
+                                 summary: { si: "• CSS තේරීම්කාරක: element, id, class, group.\n• CSS ඇතුළත් කිරීමේ ක්‍රම: අභ්‍යන්තර (Internal), බාහිර (External), පේළිගත (Inline).", en: "• CSS selectors: element, id, class, group.\n• Ways of inserting CSS: Internal, external, inline." },
+                                 videos: [], pdfs: []
+                            },
+                            "10.5.3": {
+                                 title: { si: "පෙනුම හැඩතල ගැන්වීම (Appearance Formatting)", en: "Appearance Formatting" },
+                                 summary: { si: "• පෙනුම හැඩතල ගැන්වීම: පසුබිම (වර්ණය, රූපය), පෙළ සහ අකුරු, සබැඳි, ලැයිස්තු, වගු.", en: "• Appearance formatting: Background (color, image), Text and fonts, Links, Lists, Tables." },
+                                 videos: [], pdfs: []
+                            }
+                         }
+                    },
+                    "10.6": {
+                        title: { si: "වෙබ් පිටු සෑදීමට authoring මෙවලමක් භාවිතා කරයි", en: "Uses an authoring tool to create web pages" },
+                        subtopics: {
+                            "10.6.1": {
+                                title: { si: "වෙබ් Authoring මෙවලම් (Web Authoring Tools)", en: "Web Authoring Tools" },
+                                summary: { si: "• වෙබ් authoring මෙවලම් හැඳින්වීම.\n• වෙබ් authoring මෙවලමක් භාවිතයෙන් වෙබ් පිටු නිර්මාණය කිරීම.", en: "• Introduction to web authoring tools.\n• Creates web pages using a web authoring tool." },
+                                videos: [], pdfs: []
+                           }
+                        }
+                    },
+                    "10.7": {
+                        title: { si: "PHP සහ MySQL භාවිතයෙන් ගතික වෙබ් පිටු නිර්මාණය කරයි", en: "Creates dynamic web pages using PHP and MySQL" },
+                        subtopics: {
+                            "10.7.1": {
+                                title: { si: "ගතික වෙබ් පිටු සහ PHP (Dynamic Web Pages & PHP)", en: "Dynamic Web Pages & PHP" },
+                                summary: { si: "• ගතික වෙබ් පිටු හැඳින්වීම.\n• වෙබ් පිටුවට PHP කේත කාවැද්දීම: විචල්‍ය, අරා, පාලන ව්‍යුහ, ශ්‍රිත.", en: "• Introduction to dynamic web pages.\n• Embedding PHP code into web page: Variables, Arrays, Control structures, Functions." },
+                                videos: [], pdfs: []
+                           },
+                           "10.7.2": {
+                                title: { si: "PHP සහ දත්ත සමුදාය (PHP & Database)", en: "PHP & Database" },
+                                summary: { si: "• දත්ත සමුදා සම්බන්ධතාවය.\n• දත්ත සමුදායන් සමඟ වැඩ කිරීම.", en: "• Database connectivity.\n• Working with databases." },
+                                videos: [], pdfs: []
+                           },
+                           "10.7.3": {
+                                title: { si: "HTML පෝරම (HTML Forms)", en: "HTML Forms" },
+                                summary: { si: "• පෝරම: ආදාන මූලද්‍රව්‍ය (Input element - Type, Name, Value attributes), පෙළ ආදානය (මුරපදය), රේඩියෝ බොත්තම්, සලකුණු කොටු, තේරීම්, Submit/Reset බොත්තම්.\n• Action සහ Method (Get, Post) ගුණාංග.\n• `<fieldset>` ටැගය භාවිතයෙන් පෝරම දත්ත කාණ්ඩ කිරීම.", en: "• Forms: Input element (Type, Name, Value attributes), Text input (Password), Radio buttons, Check box, Selection, Submit buttons, Reset button.\n• Action attribute, Method attribute (Get, Post).\n• Grouping form data using `<fieldset>` tag." },
+                                videos: [], pdfs: []
+                           },
+                            "10.7.4": {
+                                title: { si: "පෝරම දත්ත සහ දත්ත සමුදාය (Form Data & Database)", en: "Form Data & Database" },
+                                summary: { si: "• පෝරම දත්ත දත්ත සමුදායට සුරැකීම.\n• දත්ත මූලාශ්‍රය සෑදීම සහ දත්ත ඇතුළත් කිරීම.\n• MySQL දත්ත සමුදායෙන් දත්ත ලබා ගැනීමට PHP කේතය සෑදීම.\n• ලබාගත් දත්ත භාවිතයෙන් පෝරම අගයන් සැකසීම.", en: "• Saving form data into database.\n• Creating data source and entering data.\n• Creating PHP code to retrieve data from MySQL database.\n• Set form values using retrieved data." },
+                                videos: [], pdfs: []
+                           }
+                        }
+                    },
+                    "10.8": {
+                        title: { si: "වෙබ් අඩවි ප්‍රකාශයට පත් කිරීම සහ නඩත්තු කිරීම සිදු කරයි", en: "Publishes and maintains web sites" },
+                        subtopics: {
+                            "10.8.1": {
+                                title: { si: "ප්‍රකාශන ක්‍රම (Publishing Methods)", en: "Publishing Methods" },
+                                summary: { si: "• දේශීය ප්‍රකාශනය: තමන්ගේ පරිගණකය, අභ්‍යන්තර ජාලය (intranet).\n• අන්තර්ජාල ප්‍රකාශනය: වෙබ් සේවා සපයන්නාට සම්බන්ධ වීම, වෙබ් සේවාදායකයේ වෙබ් පිටු ප්‍රකාශයට පත් කිරීම.", en: "• Local publishing: Own computer, intranet.\n• Internet publishing: Connecting to the web Service provider, Publishing web Pages on web server." },
+                                videos: [], pdfs: []
+                           },
+                           "10.8.2": {
+                                title: { si: "වෙබ් අඩවි කාර්ය සාධනය (Website Performance)", en: "Website Performance" },
+                                summary: { si: "• වෙබ් අඩවියේ කාර්ය සාධනයට බලපාන සාධක.", en: "• Factors affecting performance of website." },
+                                videos: [], pdfs: []
+                           }
+                        }
+                    }
+                    // End of Lesson 10 main subtopics
+                } // End of Lesson 10
+            }
+        };
+
+
+        // --- DOM Elements References ---
+        const langToggleButton = document.getElementById('lang-toggle-btn');
+        const mainTitleElement = document.getElementById('main-title');
+        const footerTextElement = document.getElementById('footer-text'); // Target the <p> tag
+        const footerLinkElement = document.getElementById('footer-link'); // Target the <a> tag
+
+        const mainSubtopicsContainer = document.getElementById('main-subtopics-container');
+        const mainSubtopicListTitle = document.getElementById('main-subtopic-list-title');
+        const mainSubtopicList = document.getElementById('main-subtopic-list');
+
+        const detailedSubtopicsContainer = document.getElementById('detailed-subtopics-container');
+        const detailedSubtopicListTitle = document.getElementById('detailed-subtopic-list-title');
+        const detailedSubtopicList = document.getElementById('detailed-subtopic-list');
+
+        const summaryCardContainer = document.getElementById('summary-card-container');
+        const summaryTitle = document.getElementById('summary-title');
+        const summaryHeading = document.getElementById('summary-heading'); // Added ID
+        const summaryTextElement = document.getElementById('summary-text');
+        const videoHeading = document.getElementById('video-heading'); // Added ID
+        const videoLinksList = document.getElementById('video-links-list');
+        const pdfHeading = document.getElementById('pdf-heading'); // Added ID
+        const pdfLinksList = document.getElementById('pdf-links-list');
+
+        const backToMainSubtopicsBtn = document.getElementById('back-to-main-subtopics');
+        const backToDetailedSubtopicsBtn = document.getElementById('back-to-detailed-subtopics');
+
+        // WhatsApp Popup Elements
+        const whatsappBtnText = document.getElementById('whatsapp-btn-text');
+        const whatsappPopupTitle = document.getElementById('whatsapp-popup-title');
+        const whatsappPopupPrompt = document.getElementById('whatsapp-popup-prompt');
+        const whatsappNumberInput = document.getElementById('whatsapp-number-input'); // Already referenced
+        const confirmNumberBtn = document.getElementById('confirm-number-btn'); // Already referenced
+        const whatsappErrorMsg = document.getElementById('whatsapp-error-message'); // Already referenced
+        const sendWhatsappBtnText = document.getElementById('send-whatsapp-btn-text');
+        const sendMessageButton = document.getElementById('send-whatsapp-message-btn');
+
+
+        // --- State Variables ---
+        const lessonId = "10"; // *** CHANGED lesson ID to 10 ***
+        let currentMainSubtopicId = null; // e.g., "10.1"
+        let currentDetailedSubtopicId = null; // e.g., "10.1.1"
+
+        // --- Helper Functions ---
+        /**
+         * Finds the detailed subtopic object from the local syllabusData structure.
+         * @param {string} detailedSubtopicId - The ID of the detailed subtopic (e.g., "10.1.1").
+         * @returns {object | null} The subtopic object or null if not found.
+         */
+         function findDefaultDetailedSubtopic(detailedSubtopicId) {
+             if (!detailedSubtopicId || typeof detailedSubtopicId !== 'string') return null;
+             const parts = detailedSubtopicId.split('.');
+             // *** ADJUSTED check for lesson ID 10 ***
+             if (parts.length !== 3 || parts[0] !== lessonId) return null; // Expecting format "10.x.y"
+
+             const mainSubtopicId = `${parts[0]}.${parts[1]}`; // e.g., "10.1"
+             const mainSubtopic = syllabusData[lessonId]?.subtopics?.[mainSubtopicId];
+             return mainSubtopic?.subtopics?.[detailedSubtopicId] || null;
+         }
+
+        /**
+         * Gets translated text for a given key.
+         * @param {string} key - The key for the translation (e.g., 'mainTitle').
+         * @returns {string} The translated text in the current language.
+         */
+        function getTranslation(key) {
+            return translations[currentLanguage]?.[key] || `[${key}]`; // Fallback to key name
+        }
+
+        // --- UI Display Functions ---
+
+         /**
+         * Displays the main competency levels for Lesson 10 (e.g., 10.1, 10.2).
+         */
+         function displayMainSubtopics() {
+             console.log(`Displaying main subtopics for Lesson ${lessonId} in ${currentLanguage}`);
+              if (!mainSubtopicListTitle || !mainSubtopicList || !mainSubtopicsContainer || !detailedSubtopicsContainer || !summaryCardContainer) {
+                  console.error("displayMainSubtopics: One or more layout containers not found!");
+                  return;
+              }
+             currentMainSubtopicId = null;
+             currentDetailedSubtopicId = null;
+             const lesson = syllabusData[lessonId];
+
+             if (!lesson || !lesson.subtopics) {
+                 console.error("Lesson data or main subtopics not found for ID:", lessonId);
+                 mainSubtopicListTitle.textContent = getTranslation('errorGeneric') + `: Lesson ${lessonId} data not found`;
+                 mainSubtopicList.innerHTML = '<li>Unable to load main subtopics.</li>';
+                 mainSubtopicsContainer.classList.remove('hidden');
+                 detailedSubtopicsContainer.classList.add('hidden');
+                 summaryCardContainer.classList.add('hidden');
+                 return;
+             }
+
+              // Update UI visibility and title (using translations)
+              detailedSubtopicsContainer.classList.add('hidden');
+              summaryCardContainer.classList.add('hidden');
+              mainSubtopicsContainer.classList.remove('hidden');
+              mainSubtopicListTitle.textContent = getTranslation('mainSubtopicListTitle'); // Updated title
+              mainSubtopicList.innerHTML = '';
+
+              // Create and append main subtopic list items
+              for (const mainSubtopicId in lesson.subtopics) {
+                  const mainSubtopic = lesson.subtopics[mainSubtopicId];
+                  const listItem = document.createElement('li');
+                  listItem.dataset.mainSubtopicId = mainSubtopicId;
+                  // Use translated title
+                  listItem.innerHTML = `<span class="main-subtopic-id">${mainSubtopicId}</span><span class="main-subtopic-text">${mainSubtopic.title[currentLanguage] || mainSubtopic.title['si']}</span>`;
+                  listItem.addEventListener('click', () => {
+                      console.log(`Main subtopic item clicked: ${mainSubtopicId}`);
+                      displayDetailedSubtopics(mainSubtopicId);
+                  });
+                  mainSubtopicList.appendChild(listItem);
+              }
+              console.log(`Main subtopics displayed for Lesson ${lessonId}.`);
+         }
+
+         /**
+         * Displays the detailed list of subtopics for a given main competency ID.
+         * @param {string} mainSubtopicId - The ID of the main competency level (e.g., "10.1").
+         */
+         function displayDetailedSubtopics(mainSubtopicId) {
+             console.log(`Displaying detailed subtopics for main subtopic: ${mainSubtopicId} in ${currentLanguage}`);
+              if (!detailedSubtopicListTitle || !detailedSubtopicList || !mainSubtopicsContainer || !detailedSubtopicsContainer || !summaryCardContainer) {
+                  console.error("displayDetailedSubtopics: One or more layout containers not found!");
+                  return;
+              }
+             currentMainSubtopicId = mainSubtopicId;
+             currentDetailedSubtopicId = null;
+
+             const mainSubtopic = syllabusData[lessonId]?.subtopics?.[mainSubtopicId];
+
+             if (!mainSubtopic || !mainSubtopic.subtopics) {
+                 console.error("Main subtopic or its detailed subtopics not found for ID:", mainSubtopicId);
+                 detailedSubtopicListTitle.textContent = `${getTranslation('errorGeneric')}: Detailed subtopics for ${mainSubtopicId} not found`;
+                 detailedSubtopicList.innerHTML = '<li>Unable to load detailed subtopics.</li>';
+                 mainSubtopicsContainer.classList.add('hidden');
+                 summaryCardContainer.classList.add('hidden');
+                 detailedSubtopicsContainer.classList.remove('hidden');
+                 return;
+             }
+
+              // Update UI visibility and title (using translations)
+              mainSubtopicsContainer.classList.add('hidden');
+              summaryCardContainer.classList.add('hidden');
+              detailedSubtopicsContainer.classList.remove('hidden');
+              // Use translated title for the main competency level
+              detailedSubtopicListTitle.textContent = `${mainSubtopicId}: ${mainSubtopic.title[currentLanguage] || mainSubtopic.title['si']}`;
+              detailedSubtopicList.innerHTML = '';
+
+              // Create and append detailed subtopic list items
+              for (const detailedSubtopicId in mainSubtopic.subtopics) {
+                  const detailedSubtopic = mainSubtopic.subtopics[detailedSubtopicId];
+                  const listItem = document.createElement('li');
+                  listItem.dataset.detailedSubtopicId = detailedSubtopicId;
+                  // Use translated title for the detailed subtopic
+                  listItem.innerHTML = `<span class="detailed-subtopic-id">${detailedSubtopicId}</span><span class="detailed-subtopic-text">${detailedSubtopic.title[currentLanguage] || detailedSubtopic.title['si']}</span>`;
+                  listItem.addEventListener('click', () => {
+                      console.log(`Detailed subtopic item clicked: ${detailedSubtopicId}`);
+                      displaySummaryCard(detailedSubtopicId);
+                  });
+                  detailedSubtopicList.appendChild(listItem);
+              }
+              console.log(`Detailed subtopics displayed for ${mainSubtopicId}.`);
+         }
+
+
+        /**
+         * Displays the summary card content for a given detailed subtopic ID.
+         * @param {string} detailedSubtopicId - The ID of the detailed subtopic (e.g., "10.1.1").
+         */
+        function displaySummaryCard(detailedSubtopicId) {
+            console.log(`Displaying summary card for detailed subtopic: ${detailedSubtopicId} in ${currentLanguage}`);
+            if (!summaryTitle || !summaryTextElement || !videoLinksList || !pdfLinksList || !detailedSubtopicsContainer || !summaryCardContainer) {
+                console.error("displaySummaryCard: One or more summary card elements not found!");
+                return;
+            }
+
+            currentDetailedSubtopicId = detailedSubtopicId;
+
+            // Update UI visibility
+            detailedSubtopicsContainer.classList.add('hidden');
+            mainSubtopicsContainer.classList.add('hidden');
+            summaryCardContainer.classList.remove('hidden');
+
+            const subtopicData = findDefaultDetailedSubtopic(detailedSubtopicId);
+
+            if (!subtopicData) {
+                console.error(`Data for detailed subtopic ${detailedSubtopicId} not found.`);
+                summaryTitle.textContent = `${detailedSubtopicId}: ${getTranslation('errorGeneric')}`;
+                summaryTextElement.textContent = getTranslation('subtopicDataNotFound');
+                videoLinksList.innerHTML = `<li class="no-links">${getTranslation('errorGeneric')}</li>`;
+                pdfLinksList.innerHTML = `<li class="no-links">${getTranslation('errorGeneric')}</li>`;
+                return;
+            }
+
+            // Populate UI elements using translated data
+            summaryTitle.textContent = `${detailedSubtopicId}: ${subtopicData.title[currentLanguage] || subtopicData.title['si'] || getTranslation('summaryTitle')}`;
+            const summaryContent = subtopicData.summary[currentLanguage] || subtopicData.summary['si'] || getTranslation('summaryNotFound');
+            // Handle potential multi-line summaries with bullet points
+            const summaryPoints = summaryContent.split('\n').map(s => s.replace(/^•\s*/, '').trim()).filter(s => s);
+             if (summaryPoints.length > 1) {
+                 summaryTextElement.innerHTML = '<ul>' + summaryPoints.map(p => `<li>${p}</li>`).join('') + '</ul>';
+             } else {
+                 summaryTextElement.textContent = summaryContent;
+             }
+
+            // Render links (using translated placeholder if empty)
+            renderLinks(videoLinksList, subtopicData.videos || [], 'videos'); // Use 'videos' key for translation
+            renderLinks(pdfLinksList, subtopicData.pdfs || [], 'pdfs');     // Use 'pdfs' key for translation
+
+            console.log(`Summary card populated for ${detailedSubtopicId}.`);
+        }
+
+        /**
+         * Renders a list of links (videos or PDFs) into a <ul> element.
+         * @param {HTMLUListElement} listElement - The <ul> element to populate.
+         * @param {Array<object>} links - Array of link objects ({ url, desc }).
+         * @param {string} typeKey - 'videos' or 'pdfs' key for translation lookup.
+         */
+        function renderLinks(listElement, links, typeKey) {
+            if (!listElement) {
+                console.error(`Cannot render links: List element for ${typeKey} not found.`);
+                return;
+            }
+            listElement.innerHTML = '';
+            const linkArray = Array.isArray(links) ? links : [];
+
+            if (linkArray.length > 0) {
+                linkArray.forEach((link) => {
+                    if (!link || typeof link.url !== 'string' || link.url.trim() === '') {
+                        console.warn(`Skipping rendering invalid link object for type ${typeKey}:`, link);
+                        return;
+                    }
+                    const listItem = document.createElement('li');
+                    const url = link.url.trim();
+                    const description = typeof link.desc === 'string' ? link.desc.trim() : '';
+                    let displayUrl = url;
+                    let isValidUrl = true;
+                    try {
+                        if (!url.startsWith('/') && !url.match(/^[a-zA-Z]+:\/\//) && !url.startsWith('#')) {
+                             new URL(url); // Basic check if it's not a relative path or fragment
+                         }
+                    } catch (_) {
+                        isValidUrl = false;
+                        displayUrl = getTranslation('invalidUrlFormat'); // Use translated error
+                        console.warn(`Invalid URL format detected for link: ${url}`);
+                    }
+                    const linkText = description || displayUrl;
+                    listItem.innerHTML = `
+                        ${isValidUrl ? `<a href="${url}" target="_blank" rel="noopener noreferrer"></a>` : `<span class="invalid-url"></span>`}
+                        ${description && isValidUrl ? ` <span class="link-url">(${displayUrl})</span>` : ''}
+                    `;
+                    const linkOrSpan = listItem.firstElementChild;
+                    if (linkOrSpan) { linkOrSpan.textContent = linkText; }
+                    listElement.appendChild(listItem);
+                });
+            } else {
+                // Use translated placeholder text based on typeKey
+                const noLinksText = typeKey === 'videos' ? getTranslation('noVideos') : getTranslation('noPdfs');
+                listElement.innerHTML = `<li class="no-links">${noLinksText}</li>`;
+            }
+        }
+
+        /**
+         * Translates static text elements on the page.
+         * @param {string} lang - The target language ('si' or 'en').
+         */
+        function translateStaticElements(lang) {
+            document.documentElement.lang = lang; // Set HTML lang attribute
+            document.body.classList.toggle('en', lang === 'en'); // Toggle body class for font switching
+
+            // Update elements using translations[lang]
+            document.title = getTranslation('pageTitle');
+            if(mainTitleElement) mainTitleElement.textContent = getTranslation('mainTitle');
+            if(langToggleButton) langToggleButton.textContent = getTranslation('langToggleBtn');
+            if(mainSubtopicListTitle) mainSubtopicListTitle.textContent = getTranslation('mainSubtopicListTitle');
+            // detailedSubtopicListTitle is updated within its display function
+            if(backToMainSubtopicsBtn) backToMainSubtopicsBtn.textContent = getTranslation('backToMainSubtopics');
+            if(backToDetailedSubtopicsBtn) backToDetailedSubtopicsBtn.textContent = getTranslation('backToDetailedSubtopics');
+            if(summaryTitle) summaryTitle.textContent = getTranslation('summaryTitle'); // Title above the card
+            if(summaryHeading) summaryHeading.textContent = getTranslation('summaryHeading'); // Heading inside the card
+            if(videoHeading) videoHeading.textContent = getTranslation('videoHeading');
+            if(pdfHeading) pdfHeading.textContent = getTranslation('pdfHeading');
+            if(whatsappBtnText) whatsappBtnText.textContent = getTranslation('whatsappBtnText');
+            if(whatsappPopupTitle) whatsappPopupTitle.textContent = getTranslation('whatsappPopupTitle');
+            if(whatsappPopupPrompt) whatsappPopupPrompt.textContent = getTranslation('whatsappPopupPrompt');
+            if(whatsappNumberInput) whatsappNumberInput.placeholder = getTranslation('whatsappNumberPlaceholder');
+            if(confirmNumberBtn) confirmNumberBtn.textContent = getTranslation('confirmNumberBtn');
+            // Error message text content is set dynamically
+            if(sendWhatsappBtnText) sendWhatsappBtnText.textContent = getTranslation('sendWhatsappBtnText');
+
+            // Update footer text (handle the link separately)
+            if (footerTextElement && footerLinkElement) {
+                footerTextElement.textContent = getTranslation('footerText'); // Set the text part
+                footerLinkElement.textContent = getTranslation('footerLink'); // Set the link text
+                footerTextElement.appendChild(footerLinkElement); // Re-append the link
+            }
+
+            // Update "no links" placeholders if they are currently displayed
+            const noVideoLi = videoLinksList?.querySelector('.no-links');
+            if (noVideoLi) noVideoLi.textContent = getTranslation('noVideos');
+            const noPdfLi = pdfLinksList?.querySelector('.no-links');
+            if (noPdfLi) noPdfLi.textContent = getTranslation('noPdfs');
+        }
+
+        /**
+         * Toggles the language and updates the UI.
+         */
+        function toggleLanguage() {
+            currentLanguage = (currentLanguage === 'si') ? 'en' : 'si';
+            console.log(`Toggling language to: ${currentLanguage}`);
+
+            translateStaticElements(currentLanguage); // Translate static parts first
+
+            // Re-render the currently visible dynamic content section
+            if (!mainSubtopicsContainer.classList.contains('hidden')) {
+                displayMainSubtopics();
+            } else if (!detailedSubtopicsContainer.classList.contains('hidden')) {
+                if (currentMainSubtopicId) {
+                    displayDetailedSubtopics(currentMainSubtopicId);
+                } else {
+                    console.warn("Cannot re-render detailed view: currentMainSubtopicId is null.");
+                    displayMainSubtopics(); // Fallback to main view
+                }
+            } else if (!summaryCardContainer.classList.contains('hidden')) {
+                if (currentDetailedSubtopicId) {
+                    displaySummaryCard(currentDetailedSubtopicId);
+                } else {
+                    console.warn("Cannot re-render summary view: currentDetailedSubtopicId is null.");
+                     if (currentMainSubtopicId) {
+                         displayDetailedSubtopics(currentMainSubtopicId);
+                     } else {
+                         displayMainSubtopics(); // Fallback to main view
+                     }
+                }
+            } else {
+                // Default case: show main subtopics if nothing else is visible
+                displayMainSubtopics();
+            }
+        }
+
+
+        // --- Event Listeners Setup ---
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM fully loaded. Setting up event listeners including language toggle.");
+
+             // --- Language Toggle Listener ---
+             if (langToggleButton) {
+                 langToggleButton.addEventListener('click', toggleLanguage);
+             } else {
+                 console.error("Language Toggle Button (lang-toggle-btn) not found.");
+             }
+
+             // --- Navigation Listeners ---
+            if (backToMainSubtopicsBtn) {
+                backToMainSubtopicsBtn.addEventListener('click', () => {
+                    console.log("Back to main subtopics button clicked.");
+                    displayMainSubtopics();
+                });
+            } else console.error("Back To Main Subtopics Button (back-to-main-subtopics) not found.");
+
+            if (backToDetailedSubtopicsBtn) {
+                backToDetailedSubtopicsBtn.addEventListener('click', () => {
+                    console.log(`Back to detailed subtopics button clicked. Current main subtopic: ${currentMainSubtopicId}`);
+                     if (currentMainSubtopicId) {
+                         displayDetailedSubtopics(currentMainSubtopicId);
+                     } else {
+                         console.warn("currentMainSubtopicId is missing, going back to main subtopics list as fallback.");
+                         displayMainSubtopics();
+                     }
+                });
+            } else console.error("Back To Detailed Subtopics Button (back-to-detailed-subtopics) not found.");
+
+
+            // --- START: WhatsApp Pop-up Logic ---
+
+            const openPopupButton = document.getElementById('open-whatsapp-popup');
+            const popupOverlay = document.getElementById('whatsapp-popup-overlay');
+            const closePopupButton = document.getElementById('close-whatsapp-popup');
+            // Other WhatsApp elements already referenced above
+
+            let validatedNumber = null;
+
+            const showWhatsAppPopup = () => {
+                console.log("Opening WhatsApp pop-up.");
+                // Reset state when opening
+                if(whatsappNumberInput) whatsappNumberInput.value = '';
+                if(sendMessageButton) sendMessageButton.style.display = 'none';
+                if(confirmNumberBtn) confirmNumberBtn.style.display = 'inline-flex';
+                if(whatsappErrorMsg) whatsappErrorMsg.style.display = 'none';
+                if(whatsappNumberInput) whatsappNumberInput.classList.remove('input-error');
+                validatedNumber = null;
+                // Set text based on current language
+                if(whatsappPopupTitle) whatsappPopupTitle.textContent = getTranslation('whatsappPopupTitle');
+                if(whatsappPopupPrompt) whatsappPopupPrompt.textContent = getTranslation('whatsappPopupPrompt');
+                if(whatsappNumberInput) whatsappNumberInput.placeholder = getTranslation('whatsappNumberPlaceholder');
+                if(confirmNumberBtn) confirmNumberBtn.textContent = getTranslation('confirmNumberBtn');
+                if(sendWhatsappBtnText) sendWhatsappBtnText.textContent = getTranslation('sendWhatsappBtnText');
+
+                if (popupOverlay) {
+                    popupOverlay.style.display = 'flex';
+                    setTimeout(() => { popupOverlay.classList.add('show'); }, 10);
+                } else { console.error("WhatsApp popup overlay element not found!"); }
+            };
+
+            const hideWhatsAppPopup = () => {
+                console.log("Closing WhatsApp pop-up.");
+                if (popupOverlay) {
+                    popupOverlay.classList.remove('show');
+                    setTimeout(() => {
+                        if (!popupOverlay.classList.contains('show')) {
+                             popupOverlay.style.display = 'none';
+                        }
+                    }, 400);
+                } else { console.error("WhatsApp popup overlay element not found!"); }
+            };
+
+            if (openPopupButton) {
+                openPopupButton.addEventListener('click', showWhatsAppPopup);
+            } else { console.error("WhatsApp Pop-up Trigger Button (open-whatsapp-popup) not found."); }
+
+            if (closePopupButton) {
+                closePopupButton.addEventListener('click', hideWhatsAppPopup);
+            } else { console.error("WhatsApp Pop-up Close Button (close-whatsapp-popup) not found."); }
+
+            if (popupOverlay) {
+                popupOverlay.addEventListener('click', (event) => {
+                    if (event.target === popupOverlay) { hideWhatsAppPopup(); }
+                });
+            }
+
+            if (confirmNumberBtn) {
+                confirmNumberBtn.addEventListener('click', () => {
+                    if (!whatsappNumberInput || !whatsappErrorMsg || !sendMessageButton || !confirmNumberBtn) {
+                        console.error("Missing elements for WhatsApp number confirmation.");
+                        return;
+                    }
+                    const phoneNumber = whatsappNumberInput.value.trim();
+                    const phoneRegex = /^\+?\d{7,15}$/;
+                    if (phoneNumber && phoneRegex.test(phoneNumber)) {
+                        validatedNumber = phoneNumber.replace(/[^\d+]/g, ''); // Clean the number
+                         if (validatedNumber.startsWith('+')) {
+                             validatedNumber = '+' + validatedNumber.substring(1).replace(/\D/g, '');
+                         } else {
+                             validatedNumber = validatedNumber.replace(/\D/g, '');
+                         }
+                        whatsappErrorMsg.style.display = 'none';
+                        whatsappNumberInput.classList.remove('input-error');
+                        sendMessageButton.style.display = 'inline-flex'; // Show send button
+                        confirmNumberBtn.style.display = 'none'; // Hide confirm button
+                        console.log("WhatsApp number validated:", validatedNumber);
+                    } else {
+                        whatsappErrorMsg.textContent = getTranslation('whatsappErrorMsg'); // Use translated error
+                        whatsappErrorMsg.style.display = 'block';
+                        whatsappNumberInput.classList.add('input-error');
+                        sendMessageButton.style.display = 'none';
+                        validatedNumber = null;
+                        console.warn("WhatsApp number validation failed.");
+                    }
+                });
+            } else { console.error("Confirm Number Button (confirm-number-btn) not found."); }
+
+            if (whatsappNumberInput && confirmNumberBtn) {
+                 whatsappNumberInput.addEventListener('keypress', (event) => {
+                     if (event.key === 'Enter') {
+                         event.preventDefault();
+                         confirmNumberBtn.click(); // Trigger confirm button click on Enter
+                     }
+                 });
+            }
+
+             if (whatsappNumberInput && whatsappErrorMsg && sendMessageButton && confirmNumberBtn) {
+                 whatsappNumberInput.addEventListener('input', () => {
+                     // Clear error and reset buttons if user starts typing again
+                     if (whatsappErrorMsg.style.display === 'block') {
+                         whatsappErrorMsg.style.display = 'none';
+                         whatsappNumberInput.classList.remove('input-error');
+                     }
+                     if (sendMessageButton.style.display !== 'none') {
+                         sendMessageButton.style.display = 'none';
+                         confirmNumberBtn.style.display = 'inline-flex';
+                         validatedNumber = null; // Reset validation if input changes
+                     }
+                 });
+             }
+
+
+            if (sendMessageButton) {
+                sendMessageButton.addEventListener('click', () => {
+                    if (validatedNumber) {
+                         let waMeNumber = validatedNumber.startsWith('+') ? validatedNumber.substring(1) : validatedNumber;
+
+                         if (!waMeNumber) {
+                             if(whatsappErrorMsg) {
+                                 whatsappErrorMsg.textContent = getTranslation('whatsappCleanError');
+                                 whatsappErrorMsg.style.display = 'block';
+                             }
+                             console.error("WhatsApp Send Error: Number format invalid after cleaning.");
+                             return;
+                         }
+
+                         // --- Gather and Format Summary for WhatsApp (Using English for consistency) ---
+                         let message = '';
+                         if (currentMainSubtopicId && currentDetailedSubtopicId) {
+                             const mainSubtopicData = syllabusData[lessonId]?.subtopics?.[currentMainSubtopicId];
+                             const detailedSubtopicData = findDefaultDetailedSubtopic(currentDetailedSubtopicId);
+
+                             if (mainSubtopicData && detailedSubtopicData) {
+                                 const msgLang = 'en'; // Fixed to English for message
+                                 message += `🌐 *${syllabusData[lessonId].title[msgLang]}* (Lesson ${lessonId})\n`; // Changed icon
+                                 message += `----------------------------------------\n`;
+                                 message += `*${currentMainSubtopicId}>* ${mainSubtopicData.title[msgLang]}\n`;
+                                 message += `----------------------------------------\n\n`;
+                                 message += `*${currentDetailedSubtopicId} >* _${detailedSubtopicData.title[msgLang]}_\n\n`;
+                                 message += `🗒️ *Summary*\n`;
+                                 const summaryContent = detailedSubtopicData.summary[msgLang] || getTranslation('summaryNotFound');
+                                 const summaryPoints = summaryContent.split('\n').map(s => s.replace(/^•\s*/, '').trim()).filter(s => s);
+                                 if (summaryPoints.length > 0) {
+                                     summaryPoints.forEach(p => { message += `> • ${p}\n`; });
+                                 } else {
+                                     message += `> ${getTranslation('summaryNotFound')}\n`;
+                                 }
+                                 message += `\n`;
+
+                                 message += `📑🖇️ *PDF Links*\n`;
+                                 if (detailedSubtopicData.pdfs && detailedSubtopicData.pdfs.length > 0) {
+                                     detailedSubtopicData.pdfs.forEach(pdf => { message += `> ${pdf.desc ? pdf.desc + ': ' : ''}${pdf.url || 'N/A'}\n`; });
+                                 } else { message += `> ${getTranslation('noPdfs')}\n`; }
+                                 message += `\n`;
+
+                                 message += `📺🔗 *Video Links*\n`;
+                                 if (detailedSubtopicData.videos && detailedSubtopicData.videos.length > 0) {
+                                     detailedSubtopicData.videos.forEach(video => { message += `> ${video.desc ? video.desc + ': ' : ''}${video.url || 'N/A'}\n`; });
+                                 } else { message += `> ${getTranslation('noVideos')}\n`; }
+                                 message += `\n`;
+
+                                 message += `\n\nThank you`;
+                             } else {
+                                 message = getTranslation('subtopicDataNotFound');
+                                 console.error("WhatsApp Send Error: Failed to find data for subtopics to format message.");
+                             }
+                         } else {
+                             message = getTranslation('whatsappNoContext');
+                             console.warn("WhatsApp Send Warning: No subtopic context for message formatting.");
+                         }
+                         // --- END: Gather and Format Summary ---
+
+                        const encodedMessage = encodeURIComponent(message);
+                        const whatsappUrl = `https://wa.me/${waMeNumber}?text=${encodedMessage}`;
+
+                        console.log("Generated WhatsApp URL:", whatsappUrl);
+                        console.log("Attempting to send message...");
+
+                        const whatsappWindow = window.open(whatsappUrl, '_blank');
+                        if (!whatsappWindow) {
+                            if(whatsappErrorMsg) {
+                                whatsappErrorMsg.textContent = getTranslation('whatsappPopupBlocked');
+                                whatsappErrorMsg.style.display = 'block';
+                            }
+                            console.warn("Failed to open WhatsApp window, possibly due to popup blocker.");
+                        } else {
+                            console.log("WhatsApp window opened (or attempted).");
+                            hideWhatsAppPopup(); // Close popup after attempting to send
+                        }
+
+                    } else {
+                         if(whatsappErrorMsg) {
+                            whatsappErrorMsg.textContent = getTranslation('whatsappGenericError');
+                            whatsappErrorMsg.style.display = 'block';
+                         }
+                         sendMessageButton.style.display = 'none';
+                         if(confirmNumberBtn) confirmNumberBtn.style.display = 'inline-flex';
+                         console.error("WhatsApp Send Error: No validated number available.");
+                    }
+                });
+            } else { console.error("Send Message Button (send-whatsapp-message-btn) not found."); }
+
+            // --- END: WhatsApp Pop-up Logic ---
+
+
+            // --- Initial Application Load ---
+            console.log("Starting initial display...");
+            translateStaticElements(currentLanguage); // Set initial static text
+            displayMainSubtopics(); // Display the main competency levels first
+            console.log("Initial display complete.");
+
+        }); // End of DOMContentLoaded listener
+    </script>
+</body>
+</html>

@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="si" id="html-lang">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">පද්ධති විශ්ලේෂණය සහ සැලසුම් කිරීම</title>
+    <style>
+        /* Import modern fonts including Sinhala support */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@300;400;600;700&display=swap'); /* Added Sinhala font */
+
+        /* Define CSS Variables for easier theming */
+        :root {
+            /* Added Noto Sans Sinhala as primary, Poppins as fallback */
+            --font-primary: 'Noto Sans Sinhala', 'Poppins', sans-serif;
+            --bg-gradient: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            --card-bg: rgba(31, 41, 55, 0.8);
+            --card-bg-hover: rgba(55, 65, 81, 0.9);
+            --input-bg: rgba(17, 24, 39, 0.8);
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            --accent-primary: #38bdf8;
+            --accent-secondary: #2dd4bf;
+            --border-color: rgba(75, 85, 99, 0.6);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --shadow-color-light: rgba(0, 0, 0, 0.2);
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --info-color: #0dcaf0;
+            --danger-color: #dc3545;
+            --neutral-color: #6c757d;
+            --whatsapp-green: #25D366;
+            --whatsapp-green-dark: #1EAE56;
+            --whatsapp-teal: #128C7E;
+            --whatsapp-teal-dark: #075E54;
+
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            --border-radius-xl: 50px;
+
+            --transition-speed: 0.3s;
+        }
+
+        /* General Styling */
+        body {
+            font-family: var(--font-primary); /* Applied Sinhala font */
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding-bottom: 80px; /* Footer height + padding */
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 30px auto;
+            padding: 25px 30px;
+            background-color: var(--card-bg);
+            box-shadow: 0 8px 30px var(--shadow-color);
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--border-color);
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--accent-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            position: relative; /* Needed for absolute positioning of button */
+        }
+
+        /* Style for the translate button */
+        #translate-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 8px 15px;
+            font-size: 0.9em;
+            background-color: var(--neutral-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+        }
+        #translate-btn:hover {
+            background-color: #5a6268;
+        }
+
+        h1, h2, h3, h4 {
+            margin-bottom: 0.8em;
+            font-weight: 600;
+        }
+
+        h1 { font-size: 2.5em; color: var(--accent-primary); margin-bottom: 0.5em; } /* Adjusted margin */
+        h2 { font-size: 1.8em; color: var(--accent-secondary); }
+        h3 { font-size: 1.4em; }
+        h4 { font-size: 1.2em; color: var(--accent-secondary); }
+
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+
+        a:hover {
+            color: var(--accent-secondary);
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Mindmap Area */
+        #mindmap-area {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            padding: 25px;
+            animation: slideUpFadeIn 0.6s ease-out 0.2s backwards;
+        }
+
+        @keyframes slideUpFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+
+        #center-topic {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #111827;
+            padding: 18px 35px;
+            border-radius: var(--border-radius-xl);
+            font-size: 1.6em;
+            font-weight: 700;
+            margin-bottom: 50px;
+            box-shadow: 0 6px 15px rgba(56, 189, 248, 0.3);
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            cursor: default;
+        }
+
+        #center-topic:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.4);
+        }
+
+
+        #main-topics-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .topic-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: 20px 25px;
+            cursor: pointer;
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease;
+            min-width: 200px;
+            text-align: center;
+            box-shadow: 0 4px 10px var(--shadow-color-light);
+            opacity: 0;
+            animation: popIn 0.5s ease-out forwards;
+        }
+
+        /* Stagger animation for topic cards */
+        #main-topics-container .topic-card:nth-child(1) { animation-delay: 0.4s; }
+        #main-topics-container .topic-card:nth-child(2) { animation-delay: 0.5s; }
+        #main-topics-container .topic-card:nth-child(3) { animation-delay: 0.6s; }
+        #main-topics-container .topic-card:nth-child(4) { animation-delay: 0.7s; }
+        #main-topics-container .topic-card:nth-child(n+5) { animation-delay: 0.8s; }
+
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8) translateY(10px); }
+            80% { opacity: 1; transform: scale(1.05) translateY(0); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+
+        .topic-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 10px 20px var(--shadow-color);
+            background-color: var(--card-bg-hover);
+            border-color: var(--accent-primary);
+        }
+
+        .topic-card .topic-id {
+            font-weight: 700;
+            color: var(--accent-secondary);
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        .topic-card .topic-title-text { /* Added span for easier text update */
+             display: block;
+        }
+
+        /* Subtopics Area */
+        .subtopic-container {
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            background-color: rgba(17, 24, 39, 0.6);
+            margin-top: 30px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        #subtopic-list-title {
+            text-align: center;
+            color: var(--text-primary);
+            margin-bottom: 25px;
+            font-size: 1.6em;
+        }
+
+        #subtopic-list li {
+            background-color: var(--card-bg);
+            margin-bottom: 12px;
+            padding: 15px 20px;
+            border-radius: var(--border-radius-md);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, border-left-color var(--transition-speed) ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid transparent;
+        }
+
+        #subtopic-list li:hover {
+            background-color: var(--card-bg-hover);
+            transform: translateX(5px);
+            border-left-color: var(--accent-primary);
+        }
+
+        #subtopic-list .subtopic-id {
+            font-weight: 600;
+            margin-right: 20px;
+            color: var(--accent-secondary);
+            flex-shrink: 0;
+            font-size: 0.95em;
+        }
+        #subtopic-list .subtopic-text {
+            flex-grow: 1;
+            text-align: left;
+            color: var(--text-primary);
+        }
+
+
+        /* Summary Card Area */
+        .summary-container {
+            padding: 25px;
+            margin-top: 30px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        #summary-title {
+            text-align: center;
+            color: var(--text-primary);
+            margin-bottom: 25px;
+            font-size: 1.6em;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: 0 6px 20px var(--shadow-color-light);
+        }
+
+        .card h4 {
+            color: var(--accent-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-top: 25px;
+            margin-bottom: 18px;
+            font-weight: 600;
+        }
+
+        .card h4:first-of-type {
+            margin-top: 0;
+        }
+
+
+        #summary-text {
+            margin-bottom: 20px;
+            background-color: rgba(17, 24, 39, 0.7);
+            padding: 15px;
+            border-radius: var(--border-radius-md);
+            border: 1px solid var(--border-color);
+            min-height: 50px;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+
+        #video-links-list li,
+        #pdf-links-list li {
+            margin-bottom: 10px;
+            padding: 12px 15px;
+            background-color: rgba(55, 65, 81, 0.7);
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+            word-break: break-all;
+            display: flex;
+            flex-direction: column;
+            transition: background-color var(--transition-speed) ease;
+        }
+        #video-links-list li:hover,
+        #pdf-links-list li:hover {
+            background-color: rgba(75, 85, 99, 0.8);
+        }
+
+        #video-links-list li a,
+        #pdf-links-list li a {
+            margin-right: 0;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        #video-links-list li span.link-url,
+        #pdf-links-list li span.link-url {
+            font-style: normal;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+        #video-links-list li span.invalid-url,
+        #pdf-links-list li span.invalid-url {
+            color: var(--danger-color);
+            font-style: italic;
+        }
+        #video-links-list li.no-links,
+        #pdf-links-list li.no-links {
+            color: var(--text-secondary);
+            font-style: italic;
+            background-color: transparent;
+            border: none;
+            padding: 5px 0;
+        }
+
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 22px;
+            border: none;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            margin-top: 10px;
+            margin-right: 8px;
+            transition: background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease, transform var(--transition-speed) ease;
+            text-align: center;
+            box-shadow: 0 2px 5px var(--shadow-color-light);
+            vertical-align: middle;
+        }
+
+        .btn:hover {
+            opacity: 1;
+            box-shadow: 0 4px 10px var(--shadow-color);
+            transform: translateY(-2px);
+        }
+        .btn:active {
+            transform: translateY(0px) scale(0.98);
+            box-shadow: 0 1px 3px var(--shadow-color-light);
+        }
+
+        /* Specific button styles */
+        .btn-edit { background-color: var(--warning-color); color: #111827; }
+        .btn-edit:hover { background-color: #e6a200; }
+        .btn-add { background-color: var(--success-color); color: white; }
+        .btn-add:hover { background-color: #218838; }
+        .btn-save { background-color: var(--accent-primary); color: #111827; }
+        .btn-save:hover { background-color: #0ea5e9; }
+        .btn-cancel { background-color: var(--neutral-color); color: white; }
+        .btn-cancel:hover { background-color: #5a6268; }
+
+        /* Back navigation buttons */
+        .back-btn {
+            background-color: var(--neutral-color);
+            color: white;
+            margin-bottom: 20px;
+            display: inline-block;
+            width: fit-content;
+        }
+        .back-btn:hover { background-color: #5a6268; }
+
+        /* Styles for buttons inside the summary card */
+        .card .btn {
+            display: block;
+            width: fit-content;
+            margin: 20px 0 5px 0;
+        }
+
+        /* WhatsApp Button (Trigger for Pop-up) */
+        .btn-whatsapp { background-color: var(--whatsapp-green); color: white; }
+        .btn-whatsapp:hover { background-color: var(--whatsapp-green-dark); }
+        .btn-whatsapp svg { vertical-align: -0.125em; margin-right: 6px; }
+
+        /* Modals (Dark Theme - Kept for reference - NOT USED in this version) */
+        /* .modal { ... } */
+        /* .modal-content { ... } */
+        /* .close-btn { ... } */
+        /* .modal-content h2 { ... } */
+        /* .modal-content label { ... } */
+        /* .modal-content input[type="text"], .modal-content input[type="url"], .modal-content textarea { ... } */
+        /* .modal-content input[type="text"]:focus, .modal-content input[type="url"]:focus, .modal-content textarea:focus { ... } */
+        /* .modal-content textarea { ... } */
+        /* .modal-actions { ... } */
+        /* .modal-actions .btn { ... } */
+
+        /* --- START: WhatsApp Pop-up Styles --- */
+        .whatsapp-popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(17, 24, 39, 0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0s linear 0.4s; backdrop-filter: blur(4px); }
+        .whatsapp-popup-overlay.show { opacity: 1; visibility: visible; transition: opacity 0.4s ease; }
+        .whatsapp-popup-card { background-color: var(--card-bg); padding: 30px 40px; border-radius: var(--border-radius-lg); box-shadow: 0 10px 30px var(--shadow-color); border: 1px solid var(--border-color); position: relative; width: 90%; max-width: 450px; text-align: center; color: var(--text-primary); transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
+        .whatsapp-popup-overlay.show .whatsapp-popup-card { transform: scale(1); }
+        .whatsapp-popup-card h2 { margin-top: 0; margin-bottom: 15px; color: var(--accent-primary); }
+        .whatsapp-popup-card p { margin-bottom: 20px; color: var(--text-secondary); font-size: 0.95rem; }
+        .whatsapp-input-group { display: flex; align-items: center; margin-bottom: 10px; }
+        .whatsapp-popup-card input[type="tel"] { flex-grow: 1; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); font-size: 1em; box-sizing: border-box; min-width: 0; background-color: var(--input-bg); color: var(--text-primary); transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease; }
+        .whatsapp-popup-card input[type="tel"]:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3); }
+        .whatsapp-popup-card input.input-error { border-color: var(--danger-color); }
+        #confirm-number-btn { background-color: var(--accent-primary); color: #111827; margin-left: 10px; white-space: nowrap; padding: 10px 20px; border-radius: var(--border-radius-md); font-size: 1em; font-weight: 600; border: none; cursor: pointer; transition: background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease, transform var(--transition-speed) ease; box-shadow: 0 2px 5px var(--shadow-color-light); }
+        #confirm-number-btn:hover { background-color: #0ea5e9; box-shadow: 0 4px 10px var(--shadow-color); transform: translateY(-2px); }
+        #send-whatsapp-message-btn { background-color: var(--whatsapp-teal); color: white; margin-top: 15px; width: 100%; justify-content: center; padding: 12px 20px; font-size: 1.1rem; border-radius: var(--border-radius-md); font-weight: 600; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease, transform var(--transition-speed) ease; box-shadow: 0 2px 5px var(--shadow-color-light); }
+        #send-whatsapp-message-btn:hover { background-color: var(--whatsapp-teal-dark); box-shadow: 0 4px 10px var(--shadow-color); transform: translateY(-2px); }
+        .whatsapp-popup-close-btn { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 2rem; color: var(--text-secondary); cursor: pointer; line-height: 1; padding: 5px; transition: color var(--transition-speed) ease, transform var(--transition-speed) ease; }
+        .whatsapp-popup-close-btn:hover { color: var(--text-primary); transform: scale(1.1); }
+        .whatsapp-error-message { color: var(--danger-color); font-size: 0.9em; margin-top: -5px; margin-bottom: 10px; text-align: left; padding-left: 5px; min-height: 1.2em; }
+        .whatsapp-error-message:not([style*="block"]) { visibility: hidden; }
+        /* --- END: WhatsApp Pop-up Styles --- */
+
+        /* Footer Styles */
+        footer { position: fixed; left: 0; bottom: 0; width: 100%; background-color: var(--card-bg); padding: 15px 0; text-align: center; font-size: 0.9rem; color: var(--text-secondary); border-top: 1px solid var(--border-color); z-index: 999; backdrop-filter: blur(5px); }
+        footer p { margin: 0; }
+        footer a { color: var(--accent-primary); text-decoration: none; font-weight: 500; }
+        footer a:hover { text-decoration: underline; }
+
+        /* Responsive Design Enhancements */
+        @media (max-width: 992px) {
+            .container { margin: 20px; padding: 20px; }
+            #main-topics-container { gap: 20px; }
+            .topic-card { min-width: 180px; padding: 15px 20px; }
+            h1 { font-size: 2.2em; }
+            #translate-btn { top: 5px; right: 5px; padding: 6px 12px; font-size: 0.85em;}
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+             header { padding-bottom: 45px; } /* More space for button */
+            #translate-btn { top: auto; bottom: 5px; left: 50%; transform: translateX(-50%); width: 80%; max-width: 200px;}
+            #center-topic { font-size: 1.4em; padding: 15px 25px; margin-bottom: 40px; }
+            #main-topics-container { flex-direction: column; align-items: center; gap: 15px; }
+            .topic-card { width: 90%; max-width: 400px; min-width: unset; }
+            #main-topics-container .topic-card:nth-child(n+3) { animation-delay: 0.6s; }
+            #main-topics-container .topic-card:nth-child(n+5) { animation-delay: 0.7s; }
+            .subtopic-container, .summary-container { padding: 20px; }
+            #subtopic-list li { flex-direction: column; align-items: flex-start; padding: 12px 15px; }
+            #subtopic-list .subtopic-id { margin-bottom: 8px; margin-right: 0; }
+            #subtopic-list li:hover { transform: translateX(0px); border-left-width: 6px; }
+            /* .modal-content { width: 95%; padding: 25px; } */ /* Modal styles removed */
+            /* .modal-actions { text-align: center; } */ /* Modal styles removed */
+            /* .modal-actions .btn { margin: 8px 5px; width: calc(50% - 15px); display: inline-block; } */ /* Modal styles removed */
+            .whatsapp-popup-card { width: 95%; padding: 25px; }
+            .whatsapp-input-group { flex-direction: column; align-items: stretch; }
+            .whatsapp-popup-card input[type="tel"] { margin-bottom: 10px; }
+            #confirm-number-btn { margin-left: 0; width: 100%; }
+            #send-whatsapp-message-btn { width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            body { font-size: 15px; }
+            .container { margin: 10px; padding: 15px; min-height: 90vh; }
+            h1 { font-size: 1.7em; }
+            h2 { font-size: 1.5em; }
+            h3 { font-size: 1.2em; }
+             header { padding-bottom: 50px; } /* More space for button */
+            #translate-btn { width: 90%; }
+            #center-topic { font-size: 1.2em; padding: 12px 20px; }
+            .topic-card { width: 95%; padding: 15px; }
+            .card { padding: 20px; }
+            .card .btn { width: 100%; margin: 15px 0 5px 0; box-sizing: border-box; }
+            .card .btn-whatsapp { width: 100%; margin: 15px 0 5px 0; box-sizing: border-box; }
+            #subtopic-list li, #video-links-list li, #pdf-links-list li { padding: 10px 12px; }
+            /* .modal-content { padding: 20px; } */ /* Modal styles removed */
+            /* .modal-content h2 { font-size: 1.5em; } */ /* Modal styles removed */
+            /* .modal-actions .btn { width: 90%; margin: 8px auto; display: block; } */ /* Modal styles removed */
+            .whatsapp-popup-card { padding: 20px; }
+            .whatsapp-popup-card h2 { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="header-title">පද්ධති විශ්ලේෂණය සහ සැලසුම් කිරීම</h1>
+             <button id="translate-btn">Translate to English</button>
+        </header>
+
+        <div id="mindmap-area">
+            <div id="center-topic" class="topic-node">පද්ධති විශ්ලේෂණය සහ සැලසුම් කිරීම</div>
+            <div id="main-topics-container" class="topic-container">
+                </div>
+        </div>
+
+        <div id="subtopics-container" class="subtopic-container hidden">
+            <h2 id="subtopic-list-title">උප මාතෘකා</h2>
+            <button id="back-to-main" class="btn back-btn">← ප්‍රධාන මාතෘකා වෙත ආපසු</button>
+            <ul id="subtopic-list">
+                </ul>
+        </div>
+
+        <div id="summary-card-container" class="summary-container hidden">
+            <h3 id="summary-title">උප මාතෘකා සාරාංශය</h3>
+            <button id="back-to-subtopics" class="btn back-btn">← උප මාතෘකා වෙත ආපසු</button>
+            <div id="summary-content" class="card">
+                <h4 id="summary-heading">සාරාංශය</h4>
+                <p id="summary-text">සාරාංශය මෙහි පූරණය වනු ඇත.</p>
+
+                <h4 id="video-heading">අදාළ වීඩියෝ</h4>
+                <ul id="video-links-list">
+                    <li class="no-links">තවම වීඩියෝ එකතු කර නොමැත.</li>
+                </ul>
+
+                <h4 id="pdf-heading">අදාළ PDF</h4>
+                <ul id="pdf-links-list">
+                    <li class="no-links">තවම PDF එකතු කර නොමැත.</li>
+                </ul>
+
+                <button id="open-whatsapp-popup" class="btn btn-whatsapp">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
+                        <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+                    </svg>
+                    <span id="whatsapp-btn-text">WhatsApp හරහා යවන්න</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="whatsapp-popup-overlay" class="whatsapp-popup-overlay" style="display: none;">
+        <div class="whatsapp-popup-card">
+            <button class="whatsapp-popup-close-btn" id="close-whatsapp-popup">×</button>
+            <h2 id="whatsapp-popup-title">WhatsApp අංකය ඇතුළත් කරන්න</h2>
+            <p id="whatsapp-popup-instruction">කරුණාකර රටේ කේතය සමඟ සම්පූර්ණ අංකය ඇතුළත් කරන්න (උදා: 94771234567).</p>
+            <div class="whatsapp-input-group">
+                <input type="tel" id="whatsapp-number-input" placeholder="WhatsApp අංකය" required>
+                <button id="confirm-number-btn">අංකය තහවුරු කරන්න</button>
+            </div>
+            <p id="whatsapp-error-message" class="whatsapp-error-message" style="display: none;">කරුණාකර වලංගු දුරකථන අංකයක් ඇතුළත් කරන්න.</p>
+            <button id="send-whatsapp-message-btn" style="display: none;">
+                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16" fill="currentColor" style="margin-right: 8px; vertical-align: middle;"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.8 0-67.6-9.5-97.2-27.2l-7.2-4.3-71.6 18.7L99 353.9l-4.7-7.5c-19.1-30.3-29.8-65.1-29.8-101.4 0-99.3 80.7-179.9 180-179.9 48.4 0 93.4 18.8 127.2 52.6 33.8 33.8 52.6 78.8 52.6 127.2 0 99.3-80.7 179.9-180 179.9zm131.2-160.6c-.7-1.3-4.6-2.1-9.7-4.1l-54.2-26.5c-4.1-2-6.9-2.8-9.7 2.8-2.8 5.6-20.9 26.5-25.6 31.9-4.6 5.6-9.2 6.3-17.3 2.1-8.1-4.1-34.1-12.5-64.9-40.6-23.9-22-40.1-49.8-44.8-58.1-4.6-8.4-.5-13 2.1-17.3 2.3-3.8 4.6-6.3 6.9-8.4 2.3-2.1 4.1-3.6 6.1-6.1 2.6-3.3 1.3-6.9-.7-9.7-2.1-2.8-9.7-23.2-13.3-31.9-3.6-8.7-7.3-7.5-10.4-7.5h-9.2c-3.1 0-8.1 1.3-12.5 6.1-4.6 4.8-17.6 17.3-17.6 42.1 0 24.8 18.1 48.8 20.9 52.1 2.8 3.3 35.4 56.7 86.1 76.5 12.1 4.7 22.6 7.5 30.5 9.7 16.7 4.7 31.9 4.1 43.4 2.5 13.3-1.8 41.4-16.9 47.2-33.4 5.9-16.4 5.9-30.6 4.1-33.4z"/></svg>
+                 <span id="whatsapp-send-btn-text">පණිවිඩය යවන්න</span>
+            </button>
+        </div>
+    </div>
+
+    <footer>
+        <p id="footer-text">
+            Developed by Lakshan <a href="https://t.me/MrLAXAN" target="_blank" rel="noopener noreferrer">(සංවර්ධක අමතන්න)</a>
+        </p>
+    </footer>
+
+    <script>
+        // --- Database Functionality Removed ---
+        console.log("Running without database connection and without edit/add modals.");
+
+        // --- Syllabus Data Structure (Sinhala) ---
+        const syllabusData = {
+            "7.1": { title: "පද්ධතිවල ලක්ෂණ ගවේෂණය කරයි", subtopics: { "7.1.1": { title: "පද්ධති සංකල්පය", summary: "පද්ධතියක් යනු පොදු ඉලක්කයක් සාක්ෂාත් කර ගැනීම සඳහා නිර්මාණය කර ඇති අන්තර්ක්‍රියාකාරී සංරචක එකතුවකි. පද්ධති විශ්ලේෂණය සහ සැලසුම් කිරීම සඳහා මූලික සංකල්පය අවබෝධ කර ගැනීම ඉතා වැදගත් වේ.", videos: [{ url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", desc: "පද්ධති චින්තනයට හැඳින්වීමක්" }, { url: "https://www.youtube.com/watch?v=example2", desc: "පද්ධතියක් යනු කුමක්ද?" }], pdfs: [{ url: "https://example.com/system_concepts.pdf", desc: "පද්ධති සංකල්ප දළ විශ්ලේෂණය (PDF)" }] }, "7.1.2": { title: "පද්ධති වර්ගීකරණය", summary: "සම්භවය, පරිසරය සමඟ අන්තර්ක්‍රියා කිරීම හෝ සංරචක වැනි විවිධ නිර්ණායක මත පද්ධති වර්ගීකරණය කළ හැක.", videos: [], pdfs: [] }, "7.1.3": { title: "විවෘත සහ සංවෘත පද්ධති", summary: "විවෘත පද්ධති තම වටපිටාව සමඟ පදාර්ථ, ශක්තිය හෝ තොරතුරු හුවමාරු කර ගන්නා අතර, සංවෘත පද්ධති න්‍යායාත්මකව හුදකලා වේ.", videos: [], pdfs: [] }, "7.1.4": { title: "ස්වාභාවික සහ මිනිසා විසින් සාදන ලද පද්ධති", summary: "ස්වාභාවික පද්ධති (පරිසර පද්ධති වැනි) ස්වභාවිකව ඇති වන අතර, මිනිසා විසින් සාදන ලද පද්ධති (පරිගණක වැනි) මිනිසුන් විසින් නිර්මාණය කර ඇත.", videos: [], pdfs: [] }, "7.1.5": { title: "ජීවී සහ භෞතික පද්ධති", summary: "ජීවී පද්ධති යනු ජීව විද්‍යාත්මක ඒකක (ජීවීන්) වන අතර, භෞතික පද්ධති ජීව විද්‍යාත්මක නොවන (යන්ත්‍ර, ව්‍යුහ) වේ.", videos: [], pdfs: [] } } },
+            "7.2": { title: "විවිධ වර්ගයේ මිනිසා විසින් සාදන ලද පද්ධති සංසන්දනය කර වෙනස්කම් දක්වයි", subtopics: { "7.2.1": { title: "තොරතුරු පද්ධති", summary: "සංවිධානයක් තුළ තොරතුරු, දත්ත සහ දැනුම කළමනාකරණය සහ සැකසීම කෙරෙහි අවධානය යොමු කරන පද්ධති.", videos: [], pdfs: [] }, "7.2.2": { title: "කාර්යාල ස්වයංක්‍රීයකරණ පද්ධති (OAS)", summary: "කාර්යාල සේවකයින්ගේ කාර්යක්ෂමතාව වැඩි කිරීම සඳහා නිර්මාණය කර ඇති පද්ධති (උදා: වදන් සැකසුම්, විද්‍යුත් තැපෑල).", videos: [], pdfs: [] }, "7.2.3": { title: "ගනුදෙනු සැකසුම් පද්ධති (TPS)", summary: "සාමාන්‍ය ව්‍යාපාර ගනුදෙනු හසුරුවන පද්ධති (උදා: විකුණුම් ඇණවුම්, වැටුප් ලේඛන).", videos: [], pdfs: [] }, "7.2.4": { title: "කළමනාකරණ තොරතුරු පද්ධති (MIS)", summary: "තීරණ ගැනීමේදී සහාය වීම සඳහා ගනුදෙනු දත්ත වලින් ලබාගත් වාර්තා සහ තොරතුරු කළමනාකරුවන්ට සපයන පද්ධති.", videos: [{ url: "https://www.youtube.com/watch?v=example_mis", desc: "MIS අවබෝධ කර ගැනීම" }], pdfs: [{ url: "https://example.com/intro_to_mis.pdf", desc: "MIS හැඳින්වීම (PDF)" }, { url: "https://example.com/mis_casestudy.pdf", desc: "MIS සිද්ධි අධ්‍යයන උදාහරණය" }] }, "7.2.5": { title: "තීරණ ආධාරක පද්ධති (DSS)", summary: "අර්ධ-ව්‍යුහගත ගැටළු විසඳීම සඳහා දත්ත සහ ආකෘති භාවිතා කිරීමට කළමනාකරුවන්ට උපකාර වන අන්තර්ක්‍රියාකාරී පද්ධති.", videos: [], pdfs: [] }, "7.2.6": { title: "විධායක ආධාරක පද්ධති (ESS)", summary: "ඉහළ මට්ටමේ සාරාංශ සැපයීම සහ ප්‍රධාන කාර්ය සාධන දර්ශක නිරීක්ෂණය කිරීම සඳහා ජ්‍යෙෂ්ඨ කළමනාකාරීත්වය සඳහා නිර්මාණය කර ඇති පද්ධති.", videos: [], pdfs: [] }, "7.2.7": { title: "භූගෝලීය තොරතුරු පද්ධති (GIS)", summary: "භූගෝලීය වශයෙන් යොමු කරන ලද තොරතුරු ග්‍රහණය, ගබඩා කිරීම, විශ්ලේෂණය කිරීම සහ ප්‍රදර්ශනය කරන පද්ධති.", videos: [], pdfs: [] }, "7.2.8": { title: "දැනුම කළමනාකරණ පද්ධති (KMS)", summary: "ආයතනික දැනුම නිර්මාණය කිරීම, ග්‍රහණය කිරීම, ගබඩා කිරීම සහ බෙදා හැරීමට සහාය වන පද්ධති.", videos: [], pdfs: [] }, "7.2.9": { title: "අන්තර්ගත කළමනාකරණ පද්ධති (CMS)", summary: "ඩිජිටල් අන්තර්ගතය (උදා: වෙබ් අඩවි) නිර්මාණය කිරීම සහ වෙනස් කිරීම කළමනාකරණය කිරීමට භාවිතා කරන පද්ධති.", videos: [], pdfs: [] }, "7.2.10": { title: "ව්‍යවසාය සම්පත් සැලසුම් පද්ධති (ERPS)", summary: "විවිධ දෙපාර්තමේන්තු හරහා මූලික ව්‍යාපාර ක්‍රියාවලි කළමනාකරණය කරන ඒකාබද්ධ පද්ධති.", videos: [], pdfs: [] }, "7.2.11": { title: "ස්මාර්ට් පද්ධති", summary: "බුද්ධිමත් හැසිරීම් හෝ අනුවර්තනය වීමේ හැකියාව ප්‍රදර්ශනය කිරීම සඳහා AI හෝ යන්ත්‍ර ඉගෙනීම ඇතුළත් පද්ධති.", videos: [], pdfs: [] } } },
+            "7.3": { title: "විවිධ තොරතුරු පද්ධති සංවර්ධන ආකෘති සහ ක්‍රම ගවේෂණය කරයි", subtopics: { "7.3.1": { title: "පද්ධති සංවර්ධන ජීවන චක්‍ර ආකෘති", summary: "තොරතුරු පද්ධතියක් සංවර්ධනය කිරීමේදී ඇතුළත් වන අදියර නිර්වචනය කරන ව්‍යුහගත රාමු.", videos: [], pdfs: [] }, "7.3.2": { title: "දියඇලි ආකෘතිය (Waterfall)", summary: "ඊළඟ අදියර ආරම්භ කිරීමට පෙර එක් එක් අදියර සම්පූර්ණ කළ යුතු සාම්ප්‍රදායික, අනුක්‍රමික ආකෘතියකි.", videos: [], pdfs: [] }, "7.3.3": { title: "සර්පිල ආකෘතිය (Spiral)", summary: "දියඇලි සහ මූලාකෘතිකරණයේ අංග ඒකාබද්ධ කරන, අවදානම් විශ්ලේෂණය අවධාරණය කරන පුනරාවර්තන ආකෘතියකි.", videos: [], pdfs: [] }, "7.3.4": { title: "ඉක්මන් ප්‍රතිචාර ආකෘතිය (Agile)", summary: "නම්‍යශීලී බව, සහයෝගීතාව, පාරිභෝගික ප්‍රතිපෝෂණ සහ වේගවත් බෙදාහැරීම කෙරෙහි අවධානය යොමු කරන පුනරාවර්තන සහ වර්ධක ප්‍රවේශයකි.", videos: [{ url: "https://www.youtube.com/watch?v=example_agile", desc: "Agile සංවර්ධනය යනු කුමක්ද?" }], pdfs: [] }, "7.3.5": { title: "මූලාකෘතිකරණය (Prototyping)", summary: "පරිශීලක ප්‍රතිපෝෂණ සඳහා සංවර්ධන ක්‍රියාවලියේ මුල් අවධියේදී පද්ධතියේ ක්‍රියාකාරී ආකෘතියක් (මූලාකෘතියක්) ගොඩනැගීම.", videos: [], pdfs: [] }, "7.3.6": { title: "වේගවත් යෙදුම් සංවර්ධනය (RAD)", summary: "මූලාකෘතිකරණය, පරිශීලක සහභාගීත්වය සහ පුනරාවර්තන ගොඩනැගීම හරහා වේගය අවධාරණය කරන අනුවර්තන ආකෘතියකි.", videos: [], pdfs: [] }, "7.3.7": { title: "පද්ධති සංවර්ධන ක්‍රමවේද", summary: "ජීවන චක්‍ර ආකෘතියක් තුළ භාවිතා කරන විශේෂිත ප්‍රවේශයන්, ශිල්පීය ක්‍රම, මෙවලම් සහ ක්‍රියා පටිපාටි.", videos: [], pdfs: [] }, "7.3.8": { title: "ව්‍යුහගත ක්‍රමවේද (Structured)", summary: "ක්‍රියාවලි සහ දත්ත ප්‍රවාහයන් ඉහළ සිට පහළට වියෝජනය කිරීම අවධාරණය කරන ක්‍රමවේද.", videos: [], pdfs: [] }, "7.3.9": { title: "වස්තු කේන්ද්‍රීය ක්‍රමවේද (Object Oriented)", summary: "අන්තර්ක්‍රියාකාරී වස්තූන්ගේ එකතුවක් ලෙස පද්ධතිය ආකෘතිකරණය කිරීම කේන්ද්‍ර කරගත් ක්‍රමවේද.", videos: [], pdfs: [] } } },
+            "7.4": { title: "ව්‍යුහගත පද්ධති විශ්ලේෂණ සහ සැලසුම් ක්‍රමවේදය (SSADM) පරීක්ෂා කරයි", subtopics: { "7.4.1": { title: "SSADM හැඳින්වීම", summary: "විශේෂයෙන් එක්සත් රාජධානියේ රාජ්‍ය අංශයේ බහුලව භාවිතා වන, සම්පූර්ණ පද්ධති ජීවන චක්‍රය ආවරණය කරන ව්‍යුහගත ක්‍රමවේදයකි.", videos: [], pdfs: [] }, "7.4.2": { title: "පද්ධති සංවර්ධන ජීවන චක්‍රයේ අදියර", summary: "SSADM තුළ නිර්වචනය කර ඇති විශේෂිත අදියර, එනම් ශක්‍යතා අධ්‍යයනය, අවශ්‍යතා විශ්ලේෂණය යනාදිය.", videos: [], pdfs: [] } } },
+            "7.5": { title: "නව තොරතුරු පද්ධතියක අවශ්‍යතාවය සහ එහි ශක්‍යතාව විමර්ශනය කරයි", subtopics: { "7.5.1": { title: "මූලික විමර්ශනය", summary: "ගැටලුව හෝ අවස්ථාව අවබෝධ කර ගැනීමට සහ නව පද්ධතියක් අවශ්‍ය දැයි තීරණය කිරීමට ගන්නා මූලික පියවර.", videos: [], pdfs: [] }, "7.5.2": { title: "වත්මන් පද්ධතියේ ගැටළු හඳුනා ගැනීම", summary: "පවතින පද්ධතියේ හෝ ක්‍රියාවලියේ දුර්වලතා, අකාර්යක්ෂමතා හෝ සීමාවන් විශ්ලේෂණය කිරීම.", videos: [], pdfs: [] }, "7.5.3": { title: "විකල්ප විසඳුම් යෝජනා කිරීම", summary: "හඳුනාගත් ගැටළු විසඳීම සඳහා පද්ධතිමය නොවන විසඳුම් ඇතුළුව විවිධ ක්‍රම සාකච්ඡා කිරීම සහ යෝජනා කිරීම.", videos: [], pdfs: [] }, "7.5.4": { title: "තොරතුරු පද්ධති සඳහා ප්‍රමුඛතාවය දීම", summary: "උපායමාර්ගික වැදගත්කම, හදිසිභාවය සහ සම්පත් ලබා ගැනීමේ හැකියාව වැනි සාධක මත පදනම්ව විභව පද්ධති ව්‍යාපෘති ශ්‍රේණිගත කිරීම.", videos: [], pdfs: [] }, "7.5.5": { title: "ශක්‍යතා අධ්‍යයනය", summary: "යෝජිත පද්ධති ව්‍යාපෘතියක් ශක්‍ය දැයි සහ ඉදිරියට යා යුතු දැයි තීරණය කිරීම සඳහා සවිස්තරාත්මක තක්සේරුවක්.", videos: [], pdfs: [] }, "7.5.6": { title: "තාක්ෂණික ශක්‍යතාව", summary: "අවශ්‍ය තාක්‍ෂණය පවතීද, ලබා ගත හැකිද සහ ක්‍රියාත්මක කළ හැකිද යන්න තක්සේරු කිරීම.", videos: [], pdfs: [] }, "7.5.7": { title: "ආර්ථික ශක්‍යතාව", summary: "යෝජිත පද්ධතියේ පිරිවැය සහ ප්‍රතිලාභ ඇගයීම (පිරිවැය-ප්‍රතිලාභ විශ්ලේෂණය).", videos: [], pdfs: [] }, "7.5.8": { title: "මෙහෙයුම් ශක්‍යතාව", summary: "යෝජිත පද්ධතිය සංවිධානය තුළ කෙතරම් හොඳින් ක්‍රියා කරයිද සහ පරිශීලකයින් විසින් පිළිගනු ලබන්නේද යන්න තක්සේරු කිරීම.", videos: [], pdfs: [] }, "7.5.9": { title: "ආයතනික ශක්‍යතාව", summary: "සංවිධානයේ සංස්කෘතිය, ව්‍යුහය සහ උපායමාර්ගික ඉලක්ක සමඟ පද්ධතියේ පෙළගැස්ම ඇගයීම.", videos: [], pdfs: [] } } },
+            "7.6": { title: "වත්මන් පද්ධතිය විශ්ලේෂණය කිරීම සඳහා විවිධ ක්‍රම භාවිතා කරයි", subtopics: { "7.6.1": { title: "අවශ්‍යතා විශ්ලේෂණය", summary: "පද්ධතිය සඳහා අවශ්‍යතා සහ සීමාවන් එකතු කිරීම, ලේඛනගත කිරීම සහ විශ්ලේෂණය කිරීමේ ක්‍රියාවලිය.", videos: [], pdfs: [] }, "7.6.2": { title: "ක්‍රියාකාරී අවශ්‍යතා", summary: "පද්ධතිය කළ යුතු දේ විස්තර කරන ප්‍රකාශ (උදා: 'විකුණුම් බදු ගණනය කරන්න').", videos: [], pdfs: [] }, "7.6.3": { title: "ක්‍රියාකාරී නොවන අවශ්‍යතා", summary: "පද්ධතියේ ගුණාංග හෝ සීමාවන් විස්තර කරන ප්‍රකාශ (උදා: 'ප්‍රතිචාර කාලය < තත්පර 2', 'ආරක්ෂිත විය යුතුය').", videos: [], pdfs: [] }, "7.6.4": { title: "විශ්ලේෂණ මෙවලම්", summary: "පද්ධති අවශ්‍යතා ආකෘතිකරණය සහ අවබෝධ කර ගැනීම සඳහා භාවිතා කරන විවිධ ශිල්පීය ක්‍රම සහ රූප සටහන්.", videos: [], pdfs: [] }, "7.6.5": { title: "ව්‍යාපාර ක්‍රියාකාරකම් ආකෘතිකරණය", summary: "ව්‍යාපාරික ක්ෂේත්‍රයක් තුළ ප්‍රධාන ක්‍රියාකාරකම් අවබෝධ කර ගැනීම සහ ලේඛනගත කිරීම සඳහා වන ශිල්පීය ක්‍රම.", videos: [], pdfs: [] }, "7.6.6": { title: "ව්‍යාපාර ක්‍රියාකාරකම් ආකෘතිය", summary: "ප්‍රධාන ව්‍යාපාරික ක්‍රියාකාරකම්, ඒවායේ ප්‍රේරක සහ ප්‍රතිඵල නිරූපණය කරන රූප සටහනක්.", videos: [], pdfs: [] }, "7.6.7": { title: "දත්ත ප්‍රවාහ ආකෘතිකරණය (DFM)", summary: "පද්ධතියක් හරහා දත්ත ගමන් කරන ආකාරය විශ්ලේෂණය කිරීම සහ නිරූපණය කිරීම.", videos: [], pdfs: [] }, "7.6.8": { title: "දත්ත ප්‍රවාහ රූප සටහන් (DFD)", summary: "පද්ධතියක දත්ත ප්‍රවාහය, ක්‍රියාවලි, දත්ත ගබඩා සහ බාහිර ඒකකවල චිත්‍රක නිරූපණයන්.", videos: [], pdfs: [{ url: "https://example.com/dfd_guide.pdf", desc: "දත්ත ප්‍රවාහ රූප සටහන් සඳහා මාර්ගෝපදේශය" }, { url: "https://example.com/dfd_symbols.pdf", desc: "DFD සංකේත පැහැදිලි කිරීම" }] }, "7.6.9": { title: "මූලික ක්‍රියාවලි සහ මූලික ක්‍රියාවලි විස්තර (EPD)", summary: "DFD හි පහළම මට්ටමේ ක්‍රියාවලි හඳුනා ගැනීම සහ ඒවායේ තර්කනය විස්තර කිරීම.", videos: [], pdfs: [] }, "7.6.10": { title: "ලේඛන ප්‍රවාහ රූප සටහන", summary: "විවිධ දෙපාර්තමේන්තු හෝ ක්‍රියාවලි හරහා භෞතික ලේඛන ගලායාම පෙන්වන රූප සටහනක්.", videos: [], pdfs: [] }, "7.6.11": { title: "තාර්කික දත්ත ආකෘතිකරණය (LDM)", summary: "ක්‍රියාත්මක කිරීමෙන් ස්වාධීනව, පද්ධතියට අවශ්‍ය දත්තවල සංකල්පීය නිරූපණයක් නිර්මාණය කිරීම.", videos: [], pdfs: [] }, "7.6.12": { title: "තාර්කික දත්ත ව්‍යුහය (LDS)", summary: "දත්ත ඒකක, ගුණාංග සහ සබඳතා පෙන්වන රූප සටහනක් (බොහෝ විට সত্তা-සම්බන්ධතා රූප සටහනක් - ERD).", videos: [], pdfs: [] }, "7.6.13": { title: "ව්‍යාපාර පද්ධති විකල්ප (BSO)", summary: "නව පද්ධතිය ක්‍රියාත්මක කළ හැකි ආකාරය පිළිබඳ විවිධ ඉහළ මට්ටමේ විකල්ප සංවර්ධනය කිරීම සහ ඇගයීම.", videos: [], pdfs: [] } } },
+            "7.7": { title: "යෝජිත පද්ධතිය සැලසුම් කරයි", subtopics: { "7.7.1": { title: "තාර්කික සැලසුම් මෙවලම්", summary: "තාර්කික සැලසුම් අදියරේදී භාවිතා කරන ශිල්පීය ක්‍රම සහ රූප සටහන් (උදා: DFDs, LDSs, EPDs).", videos: [], pdfs: [] }, "7.7.2": { title: "තාර්කික දත්ත ප්‍රවාහ ආකෘතිකරණය", summary: "අවශ්‍යතා මත පදනම්ව *යෝජිත* පද්ධතිය සඳහා දත්ත ප්‍රවාහය සැලසුම් කිරීම.", videos: [], pdfs: [] }, "7.7.3": { title: "යෝජිත පද්ධතිය සඳහා තාර්කික දත්ත ප්‍රවාහ රූප සටහන්", summary: "නව පද්ධතිය හරහා දත්ත ගමන් කරන්නේ කෙසේදැයි නිරූපණය කරන DFD නිර්මාණය කිරීම.", videos: [], pdfs: [] }, "7.7.4": { title: "මූලික ක්‍රියාවලි සහ මූලික ක්‍රියාවලි විස්තරය", summary: "යෝජිත පද්ධතියේ පහළම මට්ටමේ ක්‍රියාවලි සඳහා සවිස්තරාත්මක තර්කනය නිර්වචනය කිරීම.", videos: [], pdfs: [] }, "7.7.5": { title: "පරිශීලක අතුරුමුහුණත් නිර්මාණය", summary: "පරිශීලකයින් සඳහා තිර, පෝරම, වාර්තා සහ සමස්ත අන්තර්ක්‍රියා ප්‍රවාහය සැලසුම් කිරීම.", videos: [], pdfs: [] }, "7.7.6": { title: "තාර්කික දත්ත ආකෘතිකරණය", summary: "යෝජිත පද්ධතිය සඳහා සංකල්පීය දත්ත ආකෘතිය (LDS) පිරිපහදු කිරීම.", videos: [], pdfs: [] }, "7.7.7": { title: "යෝජිත පද්ධතිය සඳහා තාර්කික දත්ත ව්‍යුහය", summary: "දත්ත ව්‍යුහය පෙන්වන අවසන් කරන ලද ERD හෝ ඊට සමාන රූප සටහන.", videos: [], pdfs: [] }, "7.7.8": { title: "දත්ත සමුදායේ භෞතික සැලසුම", summary: "තාර්කික දත්ත ආකෘතිය නිශ්චිත දත්ත සමුදා ක්‍රියාත්මක කිරීමකට පරිවර්තනය කිරීම.", videos: [], pdfs: [] }, "7.7.9": { title: "වගු සහ වාර්තා පිරිවිතර", summary: "ක්ෂේත්‍ර නාම, දත්ත වර්ග, ප්‍රමාණ සහ සීමා කිරීම් ඇතුළුව දත්ත සමුදා වගුවල නිශ්චිත ව්‍යුහය නිර්වචනය කිරීම.", videos: [], pdfs: [] }, "7.7.10": { title: "දත්ත ශබ්දකෝෂය", summary: "පද්ධතියේ භාවිතා වන සියලුම දත්ත මූලද්‍රව්‍ය ලේඛනගත කරන මධ්‍යම ගබඩාවකි.", videos: [], pdfs: [] }, "7.7.11": { title: "දත්ත සමුදා නිර්මාණය", summary: "ප්‍රමිතිකරණය සහ ප්‍රශස්තකරණය ඇතුළුව දත්ත සමුදා ව්‍යුහය සැලසුම් කිරීමේ සමස්ත ක්‍රියාවලිය.", videos: [], pdfs: [] } } },
+            "7.8": { title: "යෝජිත පද්ධතිය සංවර්ධනය කර පරීක්ෂා කරයි", subtopics: { "7.8.1": { title: "වැඩසටහන් සංවර්ධනය", summary: "සැලසුම් පිරිවිතර මත පදනම්ව මෘදුකාංග කේතය ලිවීම, සම්පාදනය කිරීම සහ නිදොස් කිරීමේ ක්‍රියාවලිය.", videos: [], pdfs: [] }, "7.8.2": { title: "දත්ත සමුදා සංවර්ධනය", summary: "සැබෑ දත්ත සමුදා ව්‍යුහය, වගු නිර්මාණය කිරීම සහ විභව ලෙස මූලික දත්ත සමඟ එය පිරවීම.", videos: [], pdfs: [] }, "7.8.3": { title: "පරීක්ෂා කිරීම", summary: "දෝෂ සොයා ගැනීමට සහ ක්‍රියාකාරීත්වය සත්‍යාපනය කිරීමට පද්ධතිය හෝ එහි සංරචක ක්‍රියාත්මක කිරීමේ ක්‍රමානුකූල ක්‍රියාවලිය.", videos: [], pdfs: [] }, "7.8.4": { title: "පරීක්ෂණ අවස්ථා", summary: "පද්ධතියේ විශේෂිත අංගයක් පරීක්ෂා කිරීම සඳහා නිර්මාණය කර ඇති නිශ්චිත ආදාන, ක්‍රියාත්මක කිරීමේ කොන්දේසි සහ අපේක්ෂිත ප්‍රතිඵල.", videos: [], pdfs: [] }, "7.8.5": { title: "සුදු පෙට්ටි පරීක්ෂාව (White box testing)", summary: "අභ්‍යන්තර කේත ව්‍යුහය සහ තර්කනය පිළිබඳ දැනුම මත පදනම් වූ පරීක්ෂාව.", videos: [], pdfs: [] }, "7.8.6": { title: "කළු පෙට්ටි පරීක්ෂාව (Black box testing)", summary: "අභ්‍යන්තර කේතය පිළිබඳ දැනුමකින් තොරව අවශ්‍යතා සහ ක්‍රියාකාරීත්වය මත පදනම් වූ පරීක්ෂාව.", videos: [], pdfs: [] }, "7.8.7": { title: "ඒකක පරීක්ෂාව (Unit testing)", summary: "හුදකලාව මෘදුකාංගයේ තනි මොඩියුල හෝ සංරචක පරීක්ෂා කිරීම.", videos: [], pdfs: [] }, "7.8.8": { title: "ඒකාබද්ධ පරීක්ෂාව (Integrated testing)", summary: "ඒකාබද්ධ සංරචක හෝ මොඩියුල අතර අතුරුමුහුණත් සහ අන්තර්ක්‍රියා පරීක්ෂා කිරීම.", videos: [], pdfs: [] }, "7.8.9": { title: "පද්ධති පරීක්ෂාව (System testing)", summary: "එය නිශ්චිත අවශ්‍යතා සපුරාලන්නේ දැයි සත්‍යාපනය කිරීම සඳහා සම්පූර්ණ ඒකාබද්ධ පද්ධතිය පරීක්ෂා කිරීම.", videos: [], pdfs: [] }, "7.8.10": { title: "පිළිගැනීමේ පරීක්ෂාව (Acceptance testing)", summary: "පද්ධතිය ඔවුන්ගේ අවශ්‍යතා සපුරාලන්නේද සහ යෙදවීම සඳහා පිළිගත හැකිද යන්න තීරණය කිරීම සඳහා පරිශීලකයින් හෝ සේවාදායකයින් විසින් පවත්වනු ලබන පරීක්ෂාව.", videos: [], pdfs: [] } } },
+            "7.9": { title: "සංවර්ධිත පද්ධතිය යොදවයි", subtopics: { "7.9.1": { title: "යෙදවීමේ ක්‍රම", summary: "මෙහෙයුම් පරිසරයට නව පද්ධතිය හඳුන්වා දීම සඳහා විවිධ උපාය මාර්ග.", videos: [], pdfs: [] }, "7.9.2": { title: "සමාන්තර ක්‍රමය (Parallel)", summary: "පැරණි එක ක්‍රියා විරහිත කිරීමට පෙර කාල පරිච්ඡේදයක් සඳහා පැරණි සහ නව පද්ධති දෙකම එකවර ක්‍රියාත්මක කිරීම.", videos: [], pdfs: [] }, "7.9.3": { title: "සෘජු ක්‍රමය (Direct)", summary: "පැරණි පද්ධතිය ක්‍රියා විරහිත කර වහාම නව පද්ධතිය ආරම්භ කිරීම ('බිග් බෑන්ග්' ලෙසද හැඳින්වේ).", videos: [], pdfs: [] }, "7.9.4": { title: "නියමු ක්‍රමය (Pilot)", summary: "පුළුල් ලෙස ව්‍යාප්ත කිරීමට පෙර සංවිධානයේ කුඩා කොටසක නව පද්ධතිය පළමුව ක්‍රියාත්මක කිරීම.", videos: [], pdfs: [] }, "7.9.5": { title: "අදියර ක්‍රමය (Phase)", summary: "කාලයත් සමඟ අදියර හෝ මොඩියුල වශයෙන් නව පද්ධතිය ක්‍රියාත්මක කිරීම.", videos: [], pdfs: [] }, "7.9.6": { title: "දෘඪාංග/මෘදුකාංග ස්ථාපනය, දත්ත සංක්‍රමණය සහ පරිශීලක පුහුණුව", summary: "යෙදවීමේ ක්‍රියාවලියේදී අවශ්‍ය වන ප්‍රධාන ක්‍රියාකාරකම්.", videos: [], pdfs: [] }, "7.9.7": { title: "සමාලෝචනය, සහාය සහ නඩත්තුව", summary: "කාර්ය සාධනය ඇගයීම, උපකාරක සේවා සැපයීම සහ අවශ්‍ය යාවත්කාලීන කිරීම් හෝ නිවැරදි කිරීම් සිදු කිරීම ඇතුළු පශ්චාත්-යෙදවීමේ ක්‍රියාකාරකම්.", videos: [], pdfs: [] } } },
+            "7.10": { title: "පෙර සූදානම් කළ පැකේජ පද්ධති සමඟ පද්ධති ක්‍රියාත්මක කිරීම විස්තර කරයි", subtopics: { "7.10.1": { title: "පෙර සූදානම් කළ පැකේජ භාවිතා කිරීමේ වාසි සහ අවාසි", summary: "මෘදුකාංග මිලදී ගැනීම සහ ගොඩනැගීම අතර ඇති වාසි (උදා: පිරිවැය, වේගය) සහ අවාසි (උදා: අභිරුචිකරණ සීමා) සංසන්දනය කිරීම.", videos: [], pdfs: [] }, "7.10.2": { title: "පැකේජ හැකියාවන්, කාර්ය ප්‍රවාහ ආදිය හඳුනා ගැනීම.", summary: "තෝරාගත් මෘදුකාංග පැකේජයේ විශේෂාංග, සීමාවන් සහ ගොඩනඟන ලද ක්‍රියාවලි හොඳින් අවබෝධ කර ගැනීම.", videos: [], pdfs: [] }, "7.10.3": { title: "ව්‍යාපාර ක්‍රියාවලි පරතර විශ්ලේෂණය", summary: "සංවිධානයේ අවශ්‍යතා සහ මෘදුකාංග පැකේජයේ හැකියාවන් අතර වෙනස්කම් හඳුනා ගැනීම.", videos: [], pdfs: [] }, "7.10.4": { title: "ව්‍යාපාර ක්‍රියාවලි සිතියම්ගත කිරීම", summary: "පවතින හෝ අනාගත ව්‍යාපාර ක්‍රියාවලි මෘදුකාංග පැකේජයේ කාර්ය ප්‍රවාහ සමඟ පෙළගැසෙන්නේ කෙසේදැයි ලේඛනගත කිරීම.", videos: [], pdfs: [] }, "7.10.5": { title: "ව්‍යාපාර ක්‍රියාවලි ප්‍රති-ඉංජිනේරුකරණය", summary: "මෘදුකාංග පැකේජයේ හැකියාවන්ගෙන් ප්‍රයෝජන ගැනීමට හෝ එහි සීමාවන් ජය ගැනීමට ව්‍යාපාර ක්‍රියාවලි ප්‍රතිනිර්මාණය කිරීම.", videos: [], pdfs: [] } } }
+        };
+
+        // --- Syllabus Data Structure (English) ---
+        const syllabusDataEnglish = {
+            "7.1": { title: "Explores the characteristics of systems", subtopics: { "7.1.1": { title: "System Concept", summary: "A system is a collection of interacting components designed to achieve a common goal. Understanding the basic concept is crucial for system analysis and design.", videos: [{ url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", desc: "Introduction to Systems Thinking" }, { url: "https://www.youtube.com/watch?v=example2", desc: "What is a System?" }], pdfs: [{ url: "https://example.com/system_concepts.pdf", desc: "System Concepts Overview (PDF)" }] }, "7.1.2": { title: "System Classification", summary: "Systems can be classified based on various criteria such as origin, interaction with the environment, or components.", videos: [], pdfs: [] }, "7.1.3": { title: "Open and Closed Systems", summary: "Open systems exchange matter, energy, or information with their surroundings, while closed systems are theoretically isolated.", videos: [], pdfs: [] }, "7.1.4": { title: "Natural and Man-made Systems", summary: "Natural systems (like ecosystems) occur naturally, while man-made systems (like computers) are designed by humans.", videos: [], pdfs: [] }, "7.1.5": { title: "Living and Physical Systems", summary: "Living systems are biological entities (organisms), whereas physical systems are non-biological (machines, structures).", videos: [], pdfs: [] } } },
+            "7.2": { title: "Compares and contrasts different types of man-made systems", subtopics: { "7.2.1": { title: "Information Systems", summary: "Systems focused on managing and processing information, data, and knowledge within an organization.", videos: [], pdfs: [] }, "7.2.2": { title: "Office Automation Systems (OAS)", summary: "Systems designed to increase the efficiency of office workers (e.g., word processing, email).", videos: [], pdfs: [] }, "7.2.3": { title: "Transaction Processing Systems (TPS)", summary: "Systems that handle routine business transactions (e.g., sales orders, payroll).", videos: [], pdfs: [] }, "7.2.4": { title: "Management Information Systems (MIS)", summary: "Systems that provide managers with reports and information derived from transaction data to support decision-making.", videos: [{ url: "https://www.youtube.com/watch?v=example_mis", desc: "Understanding MIS" }], pdfs: [{ url: "https://example.com/intro_to_mis.pdf", desc: "Introduction to MIS (PDF)" }, { url: "https://example.com/mis_casestudy.pdf", desc: "MIS Case Study Example" }] }, "7.2.5": { title: "Decision Support Systems (DSS)", summary: "Interactive systems that help managers use data and models to solve semi-structured problems.", videos: [], pdfs: [] }, "7.2.6": { title: "Executive Support Systems (ESS)", summary: "Systems designed for senior management to provide high-level summaries and track key performance indicators.", videos: [], pdfs: [] }, "7.2.7": { title: "Geographic Information Systems (GIS)", summary: "Systems that capture, store, analyze, and display geographically referenced information.", videos: [], pdfs: [] }, "7.2.8": { title: "Knowledge Management Systems (KMS)", summary: "Systems supporting the creation, capture, storage, and distribution of organizational knowledge.", videos: [], pdfs: [] }, "7.2.9": { title: "Content Management Systems (CMS)", summary: "Systems used to manage the creation and modification of digital content (e.g., websites).", videos: [], pdfs: [] }, "7.2.10": { title: "Enterprise Resource Planning Systems (ERPS)", summary: "Integrated systems managing core business processes across various departments.", videos: [], pdfs: [] }, "7.2.11": { title: "Smart Systems", summary: "Systems incorporating AI or machine learning to exhibit intelligent behavior or adaptability.", videos: [], pdfs: [] } } },
+            "7.3": { title: "Explores various information system development models and methods", subtopics: { "7.3.1": { title: "System Development Life Cycle Models", summary: "Structured frameworks defining the phases involved in developing an information system.", videos: [], pdfs: [] }, "7.3.2": { title: "Waterfall Model", summary: "A traditional, sequential model where each phase must be completed before the next begins.", videos: [], pdfs: [] }, "7.3.3": { title: "Spiral Model", summary: "An iterative model combining elements of waterfall and prototyping, emphasizing risk analysis.", videos: [], pdfs: [] }, "7.3.4": { title: "Agile Model", summary: "An iterative and incremental approach focusing on flexibility, collaboration, customer feedback, and rapid delivery.", videos: [{ url: "https://www.youtube.com/watch?v=example_agile", desc: "What is Agile Development?" }], pdfs: [] }, "7.3.5": { title: "Prototyping", summary: "Building a working model (prototype) of the system early in the development process for user feedback.", videos: [], pdfs: [] }, "7.3.6": { title: "Rapid Application Development (RAD)", summary: "An adaptive model emphasizing speed through prototyping, user involvement, and iterative construction.", videos: [], pdfs: [] }, "7.3.7": { title: "System Development Methodologies", summary: "Specific approaches, techniques, tools, and procedures used within a life cycle model.", videos: [], pdfs: [] }, "7.3.8": { title: "Structured Methodologies", summary: "Methodologies emphasizing top-down decomposition of processes and data flows.", videos: [], pdfs: [] }, "7.3.9": { title: "Object-Oriented Methodologies", summary: "Methodologies centered around modeling the system as a collection of interacting objects.", videos: [], pdfs: [] } } },
+            "7.4": { title: "Examines the Structured Systems Analysis and Design Methodology (SSADM)", subtopics: { "7.4.1": { title: "Introduction to SSADM", summary: "A structured methodology covering the complete system life cycle, widely used especially in the UK public sector.", videos: [], pdfs: [] }, "7.4.2": { title: "Phases of the System Development Life Cycle", summary: "The specific stages defined within SSADM, such as Feasibility Study, Requirements Analysis, etc.", videos: [], pdfs: [] } } },
+            "7.5": { title: "Investigates the need for a new information system and its feasibility", subtopics: { "7.5.1": { title: "Preliminary Investigation", summary: "Initial steps taken to understand the problem or opportunity and determine if a new system is warranted.", videos: [], pdfs: [] }, "7.5.2": { title: "Identifying Problems in the Current System", summary: "Analyzing the weaknesses, inefficiencies, or limitations of the existing system or process.", videos: [], pdfs: [] }, "7.5.3": { title: "Proposing Alternative Solutions", summary: "Discussing and suggesting different ways to address the identified problems, including non-system solutions.", videos: [], pdfs: [] }, "7.5.4": { title: "Prioritizing Information Systems", summary: "Ranking potential system projects based on factors like strategic importance, urgency, and resource availability.", videos: [], pdfs: [] }, "7.5.5": { title: "Feasibility Study", summary: "A detailed assessment to determine if a proposed system project is viable and should proceed.", videos: [], pdfs: [] }, "7.5.6": { title: "Technical Feasibility", summary: "Assessing whether the required technology exists, is available, and can be implemented.", videos: [], pdfs: [] }, "7.5.7": { title: "Economic Feasibility", summary: "Evaluating the costs and benefits of the proposed system (Cost-Benefit Analysis).", videos: [], pdfs: [] }, "7.5.8": { title: "Operational Feasibility", summary: "Assessing how well the proposed system will work within the organization and be accepted by users.", videos: [], pdfs: [] }, "7.5.9": { title: "Organizational Feasibility", summary: "Evaluating the system's alignment with the organization's culture, structure, and strategic goals.", videos: [], pdfs: [] } } },
+            "7.6": { title: "Uses various methods to analyze the current system", subtopics: { "7.6.1": { title: "Requirements Analysis", summary: "The process of gathering, documenting, and analyzing the needs and constraints for the system.", videos: [], pdfs: [] }, "7.6.2": { title: "Functional Requirements", summary: "Statements describing what the system must do (e.g., 'Calculate sales tax').", videos: [], pdfs: [] }, "7.6.3": { title: "Non-functional Requirements", summary: "Statements describing qualities or constraints of the system (e.g., 'Response time < 2 seconds', 'Must be secure').", videos: [], pdfs: [] }, "7.6.4": { title: "Analysis Tools", summary: "Various techniques and diagrams used to model and understand system requirements.", videos: [], pdfs: [] }, "7.6.5": { title: "Business Activity Modeling", summary: "Techniques for understanding and documenting the key activities within a business area.", videos: [], pdfs: [] }, "7.6.6": { title: "Business Activity Model", summary: "A diagram representing key business activities, their triggers, and outcomes.", videos: [], pdfs: [] }, "7.6.7": { title: "Data Flow Modeling (DFM)", summary: "Analyzing and representing how data moves through a system.", videos: [], pdfs: [] }, "7.6.8": { title: "Data Flow Diagrams (DFD)", summary: "Graphical representations of data flow, processes, data stores, and external entities in a system.", videos: [], pdfs: [{ url: "https://example.com/dfd_guide.pdf", desc: "Guide to Data Flow Diagrams" }, { url: "https://example.com/dfd_symbols.pdf", desc: "DFD Symbols Explained" }] }, "7.6.9": { title: "Elementary Processes and Elementary Process Descriptions (EPD)", summary: "Identifying the lowest-level processes in a DFD and describing their logic.", videos: [], pdfs: [] }, "7.6.10": { title: "Document Flow Diagram", summary: "A diagram showing the flow of physical documents through different departments or processes.", videos: [], pdfs: [] }, "7.6.11": { title: "Logical Data Modeling (LDM)", summary: "Creating a conceptual representation of the data required by the system, independent of implementation.", videos: [], pdfs: [] }, "7.6.12": { title: "Logical Data Structure (LDS)", summary: "A diagram showing data entities, attributes, and relationships (often an Entity-Relationship Diagram - ERD).", videos: [], pdfs: [] }, "7.6.13": { title: "Business System Options (BSO)", summary: "Developing and evaluating different high-level options for how the new system could be implemented.", videos: [], pdfs: [] } } },
+            "7.7": { title: "Designs the proposed system", subtopics: { "7.7.1": { title: "Logical Design Tools", summary: "Techniques and diagrams used during the logical design phase (e.g., DFDs, LDSs, EPDs).", videos: [], pdfs: [] }, "7.7.2": { title: "Logical Data Flow Modeling", summary: "Designing the data flow for the *proposed* system based on requirements.", videos: [], pdfs: [] }, "7.7.3": { title: "Logical Data Flow Diagrams for Proposed System", summary: "Creating DFDs that depict how data will move through the new system.", videos: [], pdfs: [] }, "7.7.4": { title: "Elementary Processes and Elementary Process Description", summary: "Defining the detailed logic for the lowest-level processes in the proposed system.", videos: [], pdfs: [] }, "7.7.5": { title: "User Interface Design", summary: "Designing screens, forms, reports, and the overall interaction flow for users.", videos: [], pdfs: [] }, "7.7.6": { title: "Logical Data Modeling", summary: "Refining the conceptual data model (LDS) for the proposed system.", videos: [], pdfs: [] }, "7.7.7": { title: "Logical Data Structure for Proposed System", summary: "The finalized ERD or similar diagram showing the data structure.", videos: [], pdfs: [] }, "7.7.8": { title: "Physical Design of Database", summary: "Translating the logical data model into a specific database implementation.", videos: [], pdfs: [] }, "7.7.9": { title: "Table and Report Specifications", summary: "Defining the specific structure of database tables, including field names, data types, sizes, and constraints.", videos: [], pdfs: [] }, "7.7.10": { title: "Data Dictionary", summary: "A central repository documenting all data elements used in the system.", videos: [], pdfs: [] }, "7.7.11": { title: "Database Design", summary: "The overall process of designing the database structure, including normalization and optimization.", videos: [], pdfs: [] } } },
+            "7.8": { title: "Develops and tests the proposed system", subtopics: { "7.8.1": { title: "Program Development", summary: "The process of writing, compiling, and debugging the software code based on design specifications.", videos: [], pdfs: [] }, "7.8.2": { title: "Database Development", summary: "Creating the actual database structure, tables, and potentially populating it with initial data.", videos: [], pdfs: [] }, "7.8.3": { title: "Testing", summary: "The systematic process of executing the system or its components to find defects and verify functionality.", videos: [], pdfs: [] }, "7.8.4": { title: "Test Cases", summary: "Specific inputs, execution conditions, and expected results designed to test a particular aspect of the system.", videos: [], pdfs: [] }, "7.8.5": { title: "White Box Testing", summary: "Testing based on knowledge of the internal code structure and logic.", videos: [], pdfs: [] }, "7.8.6": { title: "Black Box Testing", summary: "Testing based on requirements and functionality without knowledge of the internal code.", videos: [], pdfs: [] }, "7.8.7": { title: "Unit Testing", summary: "Testing individual modules or components of the software in isolation.", videos: [], pdfs: [] }, "7.8.8": { title: "Integrated Testing", summary: "Testing the interfaces and interactions between integrated components or modules.", videos: [], pdfs: [] }, "7.8.9": { title: "System Testing", summary: "Testing the complete integrated system to verify that it meets specified requirements.", videos: [], pdfs: [] }, "7.8.10": { title: "Acceptance Testing", summary: "Testing conducted by users or clients to determine if the system meets their needs and is acceptable for deployment.", videos: [], pdfs: [] } } },
+            "7.9": { title: "Deploys the developed system", subtopics: { "7.9.1": { title: "Deployment Methods", summary: "Different strategies for introducing the new system into the operational environment.", videos: [], pdfs: [] }, "7.9.2": { title: "Parallel Method", summary: "Running both the old and new systems simultaneously for a period before switching off the old one.", videos: [], pdfs: [] }, "7.9.3": { title: "Direct Method", summary: "Switching off the old system and immediately starting the new system (also known as 'Big Bang').", videos: [], pdfs: [] }, "7.9.4": { title: "Pilot Method", summary: "Implementing the new system in a small part of the organization first before rolling it out more widely.", videos: [], pdfs: [] }, "7.9.5": { title: "Phase Method", summary: "Implementing the new system in stages or modules over time.", videos: [], pdfs: [] }, "7.9.6": { title: "Hardware/Software Installation, Data Migration, and User Training", summary: "Key activities required during the deployment process.", videos: [], pdfs: [] }, "7.9.7": { title: "Review, Support, and Maintenance", summary: "Post-deployment activities including evaluating performance, providing help desk services, and making necessary updates or fixes.", videos: [], pdfs: [] } } },
+            "7.10": { title: "Describes system implementation with pre-made package systems", subtopics: { "7.10.1": { title: "Advantages and Disadvantages of Using Pre-made Packages", summary: "Comparing the pros (e.g., cost, speed) and cons (e.g., customization limits) of buying versus building software.", videos: [], pdfs: [] }, "7.10.2": { title: "Identifying Package Capabilities, Workflows, etc.", summary: "Thoroughly understanding the features, limitations, and built-in processes of the chosen software package.", videos: [], pdfs: [] }, "7.10.3": { title: "Business Process Gap Analysis", summary: "Identifying the differences between the organization's requirements and the software package's capabilities.", videos: [], pdfs: [] }, "7.10.4": { title: "Business Process Mapping", summary: "Documenting how existing or future business processes align with the software package's workflows.", videos: [], pdfs: [] }, "7.10.5": { title: "Business Process Re-engineering", summary: "Redesigning business processes to take advantage of the software package's capabilities or overcome its limitations.", videos: [], pdfs: [] } } }
+        };
+
+         // --- UI Text Strings ---
+        const uiTextSi = {
+            pageTitle: "පද්ධති විශ්ලේෂණය සහ සැලසුම් කිරීම",
+            translateBtn: "Translate to English",
+            centerTopic: "පද්ධති විශ්ලේෂණය සහ සැලසුම් කිරීම",
+            subtopicListTitlePrefix: "උප මාතෘකා",
+            backToMain: "← ප්‍රධාන මාතෘකා වෙත ආපසු",
+            backToSubtopics: "← උප මාතෘකා වෙත ආපසු",
+            summaryCardTitlePrefix: "උප මාතෘකා සාරාංශය",
+            summaryHeading: "සාරාංශය",
+            videoHeading: "අදාළ වීඩියෝ",
+            pdfHeading: "අදාළ PDF",
+            noSummary: "සාරාංශයක් නොමැත.",
+            noVideos: "තවම වීඩියෝ එකතු කර නොමැත.",
+            noPdfs: "තවම PDF එකතු කර නොමැත.",
+            error: "දෝෂයකි",
+            errorNotFound: "දත්ත සොයාගත නොහැක.",
+            invalidUrl: "වලංගු නොවන URL ආකෘතිය",
+            whatsappBtnText: "WhatsApp හරහා යවන්න",
+            whatsappPopupTitle: "WhatsApp අංකය ඇතුළත් කරන්න",
+            whatsappPopupInstruction: "කරුණාකර රටේ කේතය සමඟ සම්පූර්ණ අංකය ඇතුළත් කරන්න (උදා: 94771234567).",
+            confirmNumberBtn: "අංකය තහවුරු කරන්න",
+            whatsappErrorMsg: "කරුණාකර වලංගු දුරකථන අංකයක් ඇතුළත් කරන්න.",
+            whatsappSendBtnText: "පණිවිඩය යවන්න",
+            whatsappGenericError: "යමක් වැරදී ඇත. කරුණාකර අංකය නැවත තහවුරු කරන්න.",
+            whatsappPopupBlocked: "WhatsApp විවෘත කළ නොහැක. කරුණාකර ඔබේ pop-up blocker සැකසුම් පරීක්ෂා කරන්න.",
+            whatsappFormattingError: "සාරාංශ විස්තර ලබා ගත නොහැක.",
+            whatsappNoTopicError: "විශේෂිත මාතෘකාවක් තෝරාගෙන නොමැත.",
+            footerText: 'Developed by Lakshan <a href="https://t.me/MrLAXAN" target="_blank" rel="noopener noreferrer">(සංවර්ධක අමතන්න)</a>'
+        };
+
+        const uiTextEn = {
+            pageTitle: "System Analysis and Design",
+            translateBtn: "සිංහලට පරිවර්තනය කරන්න",
+            centerTopic: "System Analysis and Design",
+            subtopicListTitlePrefix: "Subtopics",
+            backToMain: "← Back to Main Topics",
+            backToSubtopics: "← Back to Subtopics",
+            summaryCardTitlePrefix: "Subtopic Summary",
+            summaryHeading: "Summary",
+            videoHeading: "Related Videos",
+            pdfHeading: "Related PDFs",
+            noSummary: "No summary available.",
+            noVideos: "No videos added yet.",
+            noPdfs: "No PDFs added yet.",
+            error: "Error",
+            errorNotFound: "Data not found.",
+            invalidUrl: "Invalid URL format",
+            whatsappBtnText: "Send via WhatsApp",
+            whatsappPopupTitle: "Enter WhatsApp Number",
+            whatsappPopupInstruction: "Please enter the full number with country code (e.g., 94771234567).",
+            confirmNumberBtn: "Confirm Number",
+            whatsappErrorMsg: "Please enter a valid phone number.",
+            whatsappSendBtnText: "Send Message",
+            whatsappGenericError: "Something went wrong. Please confirm the number again.",
+            whatsappPopupBlocked: "Could not open WhatsApp. Please check your pop-up blocker settings.",
+            whatsappFormattingError: "Summary details could not be retrieved.",
+            whatsappNoTopicError: "No specific topic selected.",
+            footerText: 'Developed by Lakshan <a href="https://t.me/MrLAXAN" target="_blank" rel="noopener noreferrer">(Contact Developer)</a>'
+        };
+
+        // --- DOM Elements References ---
+        const mainTopicsContainer = document.getElementById('main-topics-container');
+        const mindmapArea = document.getElementById('mindmap-area');
+        const subtopicsContainer = document.getElementById('subtopics-container');
+        const subtopicListTitle = document.getElementById('subtopic-list-title');
+        const subtopicList = document.getElementById('subtopic-list');
+        const summaryCardContainer = document.getElementById('summary-card-container');
+        const summaryTitle = document.getElementById('summary-title');
+        const summaryTextElement = document.getElementById('summary-text');
+        const videoLinksList = document.getElementById('video-links-list');
+        const pdfLinksList = document.getElementById('pdf-links-list');
+        const backToMainBtn = document.getElementById('back-to-main');
+        const backToSubtopicsBtn = document.getElementById('back-to-subtopics');
+        const translateBtn = document.getElementById('translate-btn');
+        const headerTitleEl = document.getElementById('header-title');
+        const centerTopicEl = document.getElementById('center-topic');
+        const pageTitleEl = document.getElementById('page-title');
+        const footerTextEl = document.getElementById('footer-text');
+        const summaryHeadingEl = document.getElementById('summary-heading');
+        const videoHeadingEl = document.getElementById('video-heading');
+        const pdfHeadingEl = document.getElementById('pdf-heading');
+        const whatsappBtnTextEl = document.getElementById('whatsapp-btn-text');
+        const whatsappPopupTitleEl = document.getElementById('whatsapp-popup-title');
+        const whatsappPopupInstructionEl = document.getElementById('whatsapp-popup-instruction');
+        const confirmNumberBtnEl = document.getElementById('confirm-number-btn');
+        const whatsappSendBtnTextEl = document.getElementById('whatsapp-send-btn-text');
+        const openPopupButton = document.getElementById('open-whatsapp-popup');
+        const popupOverlay = document.getElementById('whatsapp-popup-overlay');
+        const closePopupButton = document.getElementById('close-whatsapp-popup');
+        const numberInput = document.getElementById('whatsapp-number-input');
+        const confirmButton = document.getElementById('confirm-number-btn');
+        const sendMessageButton = document.getElementById('send-whatsapp-message-btn');
+        const errorMessage = document.getElementById('whatsapp-error-message');
+
+
+        // --- State Variables ---
+        let currentTopicId = null;
+        let currentSubtopicId = null;
+        let currentLanguage = 'si'; // 'si' or 'en'
+        let validatedNumber = null;
+
+        // --- Helper Functions ---
+
+        /**
+         * Finds the subtopic object from the correct language data structure.
+         * @param {string} subtopicId - The ID of the subtopic (e.g., "7.1.1").
+         * @returns {object | null} The subtopic object or null if not found.
+         */
+        function findSubtopicData(subtopicId) {
+            const data = (currentLanguage === 'en') ? syllabusDataEnglish : syllabusData;
+            for (const topicKey in data) {
+                if (data[topicKey]?.subtopics?.[subtopicId]) {
+                    return data[topicKey].subtopics[subtopicId];
+                }
+            }
+            console.warn(`Subtopic data not found in ${currentLanguage} data for ID: ${subtopicId}`);
+            return null; // Return null if not found
+        }
+
+         /**
+         * Updates static UI elements based on the current language.
+         */
+        function updateStaticUI() {
+            const uiText = (currentLanguage === 'en') ? uiTextEn : uiTextSi;
+
+            if(pageTitleEl) pageTitleEl.textContent = uiText.pageTitle;
+            if(headerTitleEl) headerTitleEl.textContent = uiText.pageTitle;
+            if(translateBtn) translateBtn.textContent = uiText.translateBtn;
+            if(centerTopicEl) centerTopicEl.textContent = uiText.centerTopic;
+            if(backToMainBtn) backToMainBtn.textContent = uiText.backToMain;
+            if(backToSubtopicsBtn) backToSubtopicsBtn.textContent = uiText.backToSubtopics;
+            if(summaryHeadingEl) summaryHeadingEl.textContent = uiText.summaryHeading;
+            if(videoHeadingEl) videoHeadingEl.textContent = uiText.videoHeading;
+            if(pdfHeadingEl) pdfHeadingEl.textContent = uiText.pdfHeading;
+            if(whatsappBtnTextEl) whatsappBtnTextEl.textContent = uiText.whatsappBtnText;
+            if(whatsappPopupTitleEl) whatsappPopupTitleEl.textContent = uiText.whatsappPopupTitle;
+            if(whatsappPopupInstructionEl) whatsappPopupInstructionEl.textContent = uiText.whatsappPopupInstruction;
+            if(confirmNumberBtnEl) confirmNumberBtnEl.textContent = uiText.confirmNumberBtn;
+            if(whatsappSendBtnTextEl) whatsappSendBtnTextEl.textContent = uiText.whatsappSendBtnText;
+            if(footerTextEl) footerTextEl.innerHTML = uiText.footerText; // Use innerHTML because of the link
+
+            // Update placeholders or default text if needed (e.g., in WhatsApp input)
+            if (numberInput) {
+                numberInput.placeholder = (currentLanguage === 'en') ? "WhatsApp Number" : "WhatsApp අංකය";
+            }
+        }
+
+
+        // --- UI Display Functions (Modified for Language) ---
+
+        function displayMainTopics() {
+            // Check if essential elements exist
+            if (!mainTopicsContainer || !mindmapArea || !subtopicsContainer || !summaryCardContainer) {
+                console.error("One or more main layout containers not found!");
+                return;
+            }
+
+            const data = (currentLanguage === 'en') ? syllabusDataEnglish : syllabusData;
+            mainTopicsContainer.innerHTML = ''; // Clear previous topics
+            mindmapArea.classList.remove('hidden');
+            subtopicsContainer.classList.add('hidden');
+            summaryCardContainer.classList.add('hidden');
+
+            // Populate main topics
+            for (const topicId in data) {
+                const topic = data[topicId];
+                if (!topic) continue; // Skip if topic data is missing
+
+                const card = document.createElement('div');
+                card.className = 'topic-card';
+                card.dataset.topicId = topicId;
+                // Use a span for the title text for easier updating
+                card.innerHTML = `<span class="topic-id">${topicId}</span><span class="topic-title-text">${topic.title || 'Untitled Topic'}</span>`;
+                card.addEventListener('click', () => displaySubtopics(topicId));
+                mainTopicsContainer.appendChild(card);
+            }
+            console.log(`Main topics displayed in ${currentLanguage}.`);
+        }
+
+        function displaySubtopics(topicId) {
+            console.log(`Displaying subtopics for topic: ${topicId} in ${currentLanguage}`);
+            // Check if essential elements exist
+            if (!subtopicListTitle || !subtopicList || !mindmapArea || !subtopicsContainer || !summaryCardContainer) {
+                console.error("One or more subtopic layout elements not found!");
+                return;
+            }
+
+            currentTopicId = topicId; // Store the current topic ID
+            const data = (currentLanguage === 'en') ? syllabusDataEnglish : syllabusData;
+            const uiText = (currentLanguage === 'en') ? uiTextEn : uiTextSi;
+            const topic = data[topicId];
+
+            // Handle case where topic or subtopics might be missing
+            if (!topic || !topic.subtopics) {
+                console.error(`Topic or subtopics not found in ${currentLanguage} data for ID:`, topicId);
+                subtopicListTitle.textContent = `${topicId}: ${uiText.error}`;
+                subtopicList.innerHTML = `<li>${uiText.errorNotFound}</li>`;
+            } else {
+                 // Combine prefix and title for the subtopic list header
+                subtopicListTitle.textContent = `${uiText.subtopicListTitlePrefix} (${topicId}: ${topic.title || '???'})`;
+                subtopicList.innerHTML = ''; // Clear previous subtopics
+
+                // Populate subtopics
+                for (const subtopicId in topic.subtopics) {
+                    const subtopic = topic.subtopics[subtopicId];
+                    if (!subtopic) continue; // Skip if subtopic data is missing
+
+                    const listItem = document.createElement('li');
+                    listItem.dataset.subtopicId = subtopicId;
+                    listItem.innerHTML = `<span class="subtopic-id">${subtopicId}</span><span class="subtopic-text">${subtopic.title || 'Untitled Subtopic'}</span>`;
+                    listItem.addEventListener('click', () => {
+                        console.log(`Subtopic item clicked: ${subtopicId}`);
+                        displaySummaryCard(subtopicId);
+                    });
+                    subtopicList.appendChild(listItem);
+                }
+            }
+
+            // Show/hide containers
+            mindmapArea.classList.add('hidden');
+            summaryCardContainer.classList.add('hidden');
+            subtopicsContainer.classList.remove('hidden');
+
+            console.log(`Subtopics displayed for ${topicId} in ${currentLanguage}.`);
+        }
+
+
+        function displaySummaryCard(subtopicId) {
+            console.log(`Displaying summary card for subtopic: ${subtopicId} in ${currentLanguage}`);
+             // Check if essential elements exist
+             if (!summaryTitle || !summaryTextElement || !videoLinksList || !pdfLinksList || !subtopicsContainer || !summaryCardContainer) {
+                 console.error("One or more summary card elements not found!");
+                 return;
+             }
+
+            currentSubtopicId = subtopicId; // Store the current subtopic ID
+            subtopicsContainer.classList.add('hidden');
+            summaryCardContainer.classList.remove('hidden');
+
+            const subtopicData = findSubtopicData(subtopicId); // Uses currentLanguage
+            const uiText = (currentLanguage === 'en') ? uiTextEn : uiTextSi;
+
+            // Handle case where subtopic data might be missing
+            if (!subtopicData) {
+                console.error(`Data for subtopic ${subtopicId} not found in ${currentLanguage} data.`);
+                summaryTitle.textContent = `${subtopicId}: ${uiText.error}`;
+                summaryTextElement.textContent = uiText.errorNotFound;
+                videoLinksList.innerHTML = `<li class="no-links">${uiText.error}</li>`;
+                pdfLinksList.innerHTML = `<li class="no-links">${uiText.error}</li>`;
+                return;
+            }
+
+            // Populate summary card content
+            summaryTitle.textContent = `${uiText.summaryCardTitlePrefix} (${subtopicId}: ${subtopicData.title ?? '???'})`;
+            summaryTextElement.textContent = subtopicData.summary || uiText.noSummary; // Use || for default
+
+            // Get original Sinhala data just for links (assuming links are language-independent)
+            // Find the original topic ID if it's different (e.g., 7.1 from 7.1.x)
+            const originalTopicId = subtopicId.substring(0, subtopicId.lastIndexOf('.'));
+            const originalSubtopicData = syllabusData[originalTopicId]?.subtopics?.[subtopicId];
+
+            renderLinks(videoLinksList, originalSubtopicData?.videos || [], 'videos');
+            renderLinks(pdfLinksList, originalSubtopicData?.pdfs || [], 'pdfs');
+
+            console.log(`Summary card populated for ${subtopicId} in ${currentLanguage}.`);
+        }
+
+        function renderLinks(listElement, links, type) {
+            if (!listElement) {
+                console.error(`List element for rendering ${type} links not found.`);
+                return;
+            }
+
+            const uiText = (currentLanguage === 'en') ? uiTextEn : uiTextSi;
+            listElement.innerHTML = ''; // Clear previous links
+            const linkArray = Array.isArray(links) ? links : [];
+
+            if (linkArray.length > 0) {
+                linkArray.forEach((link) => {
+                    // Basic validation for link object and URL
+                    if (!link || typeof link.url !== 'string' || link.url.trim() === '') {
+                        console.warn("Skipping invalid link object:", link);
+                        return;
+                    }
+
+                    const listItem = document.createElement('li');
+                    const url = link.url.trim();
+                    // Use original description from Sinhala data, assuming it's often a name/identifier or language-neutral
+                    const description = typeof link.desc === 'string' ? link.desc.trim() : '';
+                    let displayUrl = url;
+                    let isValidUrl = true;
+
+                    // Simple URL validation (allows relative, absolute, and mailto/tel etc.)
+                    try {
+                        // Avoid trying to parse relative URLs or protocol-less ones meant for specific handlers
+                        if (!url.startsWith('/') && !url.match(/^[a-zA-Z]+:/) && !url.startsWith('#')) {
+                             // Test if it's a valid absolute URL structure if it looks like one
+                             if (url.includes('://') || url.startsWith('www.')) {
+                                 new URL(url);
+                             }
+                             // Otherwise, assume it's valid (could be a relative path)
+                        }
+                    } catch (_) {
+                        isValidUrl = false;
+                        displayUrl = `(${uiText.invalidUrl})`; // Use translated error message
+                        console.warn(`Invalid URL format detected for link: ${url}`);
+                    }
+
+                    // Determine the main text for the link/span
+                    const linkText = description || (isValidUrl ? url : uiText.invalidUrl); // Show URL if no description and valid
+
+                    // Construct list item HTML
+                    listItem.innerHTML = `
+                        ${isValidUrl ? `<a href="${url}" target="_blank" rel="noopener noreferrer"></a>` : `<span class="invalid-url"></span>`}
+                        ${description && isValidUrl ? ` <span class="link-url">(${url})</span>` : ''}
+                        ${!isValidUrl && description ? ` <span class="link-url">(${url})</span>` : ''} `;
+
+                    // Set the text content for the link or span
+                    const linkOrSpan = listItem.firstElementChild;
+                    if (linkOrSpan) { linkOrSpan.textContent = linkText; }
+
+                    listElement.appendChild(listItem);
+                });
+            } else {
+                // Use translated "no links" message
+                const noLinksMsg = (type === 'videos') ? uiText.noVideos : uiText.noPdfs;
+                listElement.innerHTML = `<li class="no-links">${noLinksMsg}</li>`;
+            }
+        }
+
+        // --- START: WhatsApp Pop-up Logic ---
+        const showWhatsAppPopup = () => {
+            console.log("Opening WhatsApp pop-up.");
+            if (!popupOverlay || !numberInput || !sendMessageButton || !confirmButton || !errorMessage) {
+                console.error("WhatsApp popup elements missing!");
+                return;
+            }
+            updateStaticUI(); // Ensure popup text is in current language
+            numberInput.value = '';
+            sendMessageButton.style.display = 'none';
+            confirmButton.style.display = 'inline-flex'; // Use inline-flex for button with icon/text
+            errorMessage.style.display = 'none';
+            errorMessage.textContent = ''; // Clear previous errors
+            numberInput.classList.remove('input-error');
+            validatedNumber = null;
+
+            popupOverlay.style.display = 'flex';
+            // Delay adding class for transition effect
+            setTimeout(() => { popupOverlay.classList.add('show'); }, 10);
+        };
+
+        const hideWhatsAppPopup = () => {
+            console.log("Closing WhatsApp pop-up.");
+             if (!popupOverlay) {
+                console.error("WhatsApp popup overlay element not found!");
+                return;
+            }
+            popupOverlay.classList.remove('show');
+            // Wait for transition before hiding
+            setTimeout(() => { popupOverlay.style.display = 'none'; }, 400); // Match transition duration
+        };
+        // --- END: WhatsApp Pop-up Logic ---
+
+
+        // --- Event Listeners Setup ---
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM fully loaded. Setting up event listeners.");
+
+            // --- Navigation Listeners ---
+            if (backToMainBtn) {
+                backToMainBtn.addEventListener('click', () => {
+                    console.log("Back to main topics button clicked.");
+                    displayMainTopics(); // Will use currentLanguage
+                });
+            } else console.error("Back To Main Button (back-to-main) not found.");
+
+            if (backToSubtopicsBtn) {
+                backToSubtopicsBtn.addEventListener('click', () => {
+                    console.log(`Back to subtopics button clicked. Current topic: ${currentTopicId}`);
+                    if (currentTopicId) {
+                        displaySubtopics(currentTopicId); // Will use currentLanguage
+                    } else {
+                         console.warn("currentTopicId is missing, going back to main topics.");
+                         displayMainTopics();
+                    }
+                });
+            } else console.error("Back To Subtopics Button (back-to-subtopics) not found.");
+
+            // --- Translate Button Listener ---
+            if (translateBtn) {
+                translateBtn.addEventListener('click', () => {
+                    currentLanguage = (currentLanguage === 'si') ? 'en' : 'si'; // Toggle language
+                    console.log(`Language changed to: ${currentLanguage}`);
+                    document.documentElement.lang = currentLanguage; // Update html lang attribute
+
+                    updateStaticUI(); // Update all static text elements
+
+                    // Re-render the current view based on which container is visible
+                    if (subtopicsContainer && !subtopicsContainer.classList.contains('hidden')) {
+                        // Subtopics view is active
+                        if (currentTopicId) displaySubtopics(currentTopicId);
+                        else displayMainTopics(); // Fallback if somehow topicId is lost
+                    } else if (summaryCardContainer && !summaryCardContainer.classList.contains('hidden')) {
+                         // Summary view is active
+                        if (currentSubtopicId) displaySummaryCard(currentSubtopicId);
+                        else if (currentTopicId) displaySubtopics(currentTopicId); // Fallback
+                        else displayMainTopics(); // Fallback
+                    } else {
+                        // Main topics view is active (or default)
+                        displayMainTopics();
+                    }
+                });
+            } else {
+                console.error("Translate Button (translate-btn) not found.");
+            }
+
+            // --- WhatsApp Popup Listeners ---
+            if (openPopupButton) {
+                 openPopupButton.addEventListener('click', showWhatsAppPopup);
+            } else { console.error("WhatsApp Pop-up Trigger Button (open-whatsapp-popup) not found."); }
+
+            if (closePopupButton) {
+                 closePopupButton.addEventListener('click', hideWhatsAppPopup);
+            } else { console.error("WhatsApp Pop-up Close Button (close-whatsapp-popup) not found."); }
+
+            // Close popup if clicking outside the card
+            if (popupOverlay) {
+                 popupOverlay.addEventListener('click', (event) => {
+                     if (event.target === popupOverlay) { hideWhatsAppPopup(); }
+                 });
+            } else { console.error("WhatsApp popup overlay element not found!"); }
+
+
+            // Confirm Number Button Listener
+            if (confirmButton && numberInput && errorMessage && sendMessageButton) {
+                confirmButton.addEventListener('click', () => {
+                    const uiText = (currentLanguage === 'en') ? uiTextEn : uiTextSi; // Get current UI text
+                    const phoneNumber = numberInput.value.trim();
+                    // Regex allows optional '+' and requires 7-15 digits
+                    const phoneRegex = /^\+?\d{7,15}$/;
+
+                    if (phoneNumber && phoneRegex.test(phoneNumber)) {
+                        // Basic cleaning: remove non-digits except leading '+'
+                        validatedNumber = phoneNumber.replace(/[^\d+]/g, '');
+                        if (validatedNumber.startsWith('+')) {
+                             validatedNumber = '+' + validatedNumber.substring(1).replace(/\D/g, '');
+                        } else {
+                             validatedNumber = validatedNumber.replace(/\D/g, '');
+                        }
+                        console.log("Validated Number:", validatedNumber);
+                        errorMessage.style.display = 'none';
+                        numberInput.classList.remove('input-error');
+                        sendMessageButton.style.display = 'inline-flex'; // Show send button
+                        confirmButton.style.display = 'none'; // Hide confirm button
+                    } else {
+                        errorMessage.textContent = uiText.whatsappErrorMsg; // Use translated error
+                        errorMessage.style.display = 'block';
+                        numberInput.classList.add('input-error');
+                        sendMessageButton.style.display = 'none';
+                        validatedNumber = null;
+                    }
+                });
+            } else { console.error("One or more WhatsApp confirm button elements not found."); }
+
+            // Allow Enter key to confirm number
+            if (numberInput && confirmButton) {
+                 numberInput.addEventListener('keypress', (event) => {
+                     if (event.key === 'Enter' && confirmButton.style.display !== 'none') {
+                         event.preventDefault(); // Prevent form submission if it were in a form
+                         confirmButton.click(); // Trigger the confirm button click
+                     }
+                 });
+            }
+
+            // Reset validation if user types again after error
+             if (numberInput && errorMessage && sendMessageButton && confirmButton) {
+                numberInput.addEventListener('input', () => {
+                    if (errorMessage.style.display === 'block') {
+                        errorMessage.style.display = 'none';
+                        numberInput.classList.remove('input-error');
+                        sendMessageButton.style.display = 'none'; // Hide send button again
+                        confirmButton.style.display = 'inline-flex'; // Show confirm button again
+                        validatedNumber = null;
+                    }
+                });
+            }
+
+            // Send Message Button Listener
+            if (sendMessageButton && errorMessage && confirmButton) {
+                sendMessageButton.addEventListener('click', () => {
+                    const uiText = (currentLanguage === 'en') ? uiTextEn : uiTextSi; // Get current UI text
+                    if (validatedNumber) {
+                        // Prepare number for wa.me link (remove '+')
+                        let waMeNumber = validatedNumber.startsWith('+') ? validatedNumber.substring(1) : validatedNumber;
+                        if (!waMeNumber) {
+                            errorMessage.textContent = uiText.whatsappGenericError; // Use translated error
+                            errorMessage.style.display = 'block';
+                            console.error("Error: validatedNumber became empty after processing.");
+                            return;
+                        }
+
+                        // --- Gather and Format Summary for WhatsApp (Uses currentLanguage) ---
+                        let message = '';
+                        const data = (currentLanguage === 'en') ? syllabusDataEnglish : syllabusData;
+                        const uiTextWA = (currentLanguage === 'en') ? uiTextEn : uiTextSi; // Use specific WA text obj
+
+                        if (currentTopicId && currentSubtopicId) {
+                             // Find the topic and subtopic data in the current language
+                             const topicData = data[currentTopicId];
+                             const subtopicData = findSubtopicData(currentSubtopicId); // Uses currentLanguage
+
+                            if (topicData && subtopicData) {
+                                const lessonNum = currentTopicId.split('.')[0]; // Extract lesson number (e.g., 7)
+                                message += `⚙️ *${uiTextWA.pageTitle}* (Lesson ${lessonNum})\n`;
+                                message += `----------------------------------------\n`;
+                                message += `*${currentTopicId}:* ${topicData.title || 'N/A'}\n`;
+                                message += `----------------------------------------\n\n`;
+                                message += `*${currentSubtopicId}:* _${subtopicData.title || 'N/A'}_\n\n`;
+                                message += `🗒️ *${uiTextWA.summaryHeading}*\n`;
+                                message += `> ${subtopicData.summary || uiTextWA.noSummary}\n\n`;
+
+                                // Get original Sinhala data just for links (assuming links are language-independent)
+                                const originalTopicIdForLinks = currentSubtopicId.substring(0, currentSubtopicId.lastIndexOf('.'));
+                                const originalSubtopicDataForLinks = syllabusData[originalTopicIdForLinks]?.subtopics?.[currentSubtopicId];
+
+                                message += `📑🖇️ *${uiTextWA.pdfHeading}*\n`;
+                                if (originalSubtopicDataForLinks?.pdfs && originalSubtopicDataForLinks.pdfs.length > 0) {
+                                    originalSubtopicDataForLinks.pdfs.forEach(pdf => {
+                                        if(pdf && pdf.url) message += `> ${pdf.desc ? pdf.desc + ': ' : ''}${pdf.url}\n`;
+                                    });
+                                } else { message += `> ${uiTextWA.noPdfs}\n`; }
+                                message += `\n`;
+
+                                message += `📺🔗 *${uiTextWA.videoHeading}*\n`;
+                                if (originalSubtopicDataForLinks?.videos && originalSubtopicDataForLinks.videos.length > 0) {
+                                     originalSubtopicDataForLinks.videos.forEach(video => {
+                                         if(video && video.url) message += `> ${video.desc ? video.desc + ': ' : ''}${video.url}\n`;
+                                     });
+                                } else { message += `> ${uiTextWA.noVideos}\n`; }
+                                message += `\n`;
+
+                                message += `\n\nThank you`; // Keep neutral or use uiTextWA.thankYou if added
+                            } else {
+                                message = uiTextWA.whatsappFormattingError; // Use translated error
+                                console.error("WhatsApp Send Error: Failed to find data for topic/subtopic to format message.");
+                            }
+                        } else {
+                            message = uiTextWA.whatsappNoTopicError; // Use translated warning
+                            console.warn("WhatsApp Send Warning: No topic/subtopic context for message formatting.");
+                        }
+                        // --- END: Gather and Format Summary ---
+
+                        const encodedMessage = encodeURIComponent(message);
+                        const whatsappUrl = `https://wa.me/${waMeNumber}?text=${encodedMessage}`;
+                        console.log("Generated WhatsApp URL:", whatsappUrl);
+
+                        // Attempt to open WhatsApp
+                        const whatsappWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+                        if (!whatsappWindow) {
+                            // Alert might be blocked too, but worth trying
+                            alert(uiTextWA.whatsappPopupBlocked); // Use translated alert
+                            console.warn("Failed to open WhatsApp window, possibly due to popup blocker.");
+                            // Optionally display the error message in the popup itself
+                            errorMessage.textContent = uiTextWA.whatsappPopupBlocked;
+                            errorMessage.style.display = 'block';
+                        } else {
+                            hideWhatsAppPopup(); // Close popup only if window opened successfully
+                        }
+
+                    } else {
+                         // This case should ideally not be reached if buttons are hidden correctly
+                         errorMessage.textContent = uiText.whatsappGenericError; // Use translated error
+                         errorMessage.style.display = 'block';
+                         sendMessageButton.style.display = 'none';
+                         confirmButton.style.display = 'inline-flex';
+                         console.error("Send Message clicked but validatedNumber is null.");
+                    }
+                });
+            } else { console.error("Send Message Button or related elements not found."); }
+
+
+            // --- Initial Application Load ---
+            console.log("Starting initial display...");
+            updateStaticUI(); // Set initial static text based on default language ('si')
+            displayMainTopics(); // Display main topics in the default language
+            console.log("Initial display complete.");
+
+        }); // End of DOMContentLoaded listener
+    </script>
+</body>
+</html>
